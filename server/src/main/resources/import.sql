@@ -1,0 +1,15 @@
+INSERT INTO tb_user(display_name, username, password) VALUES ('Administrador', 'admin','$2a$10$.PVIfB07x.SfMYTcToxL0.yxcLWU0GbS2NUO1W1QAvqMm/TsFhVem');
+INSERT INTO tb_user(display_name, username, password) VALUES ('Teste', 'test','$2a$10$.PVIfB07x.SfMYTcToxL0.yxcLWU0GbS2NUO1W1QAvqMm/TsFhVem');
+INSERT INTO tb_account (saved_money, user_id, description) VALUES(1000, 1, 'Nubank');
+INSERT INTO tb_account (saved_money, user_id, description) VALUES(100, 2, 'Nubank');
+INSERT INTO tb_account (saved_money, user_id, description) VALUES(0, 1, 'Inter');
+INSERT INTO tb_revenue ("date", received, value, account_id, account_id) VALUES('01/01/2023', false, 5000, 1, 1);
+INSERT INTO tb_revenue ("date", received, value, account_id, account_id) VALUES('02/01/2023', false, 4000, 2, 2);
+INSERT INTO tb_expense_header (billing_date, estimated_value, responsable_user_id, description, category, status) VALUES('10/01/2023', 500, 2, 'Mercado', 'VARIAVEL', 'EM_ABERTO');
+INSERT INTO tb_expense_header (billing_date, estimated_value, responsable_user_id, description, category, status) VALUES('15/01/2023', 1000, 1, 'Aluguel', 'FIXO', 'PENDENTE');
+INSERT INTO tb_expense_detail (payment_date, real_value, expense_header_id, description, account_id) VALUES('03/01/2023', 150.56, 1, 'Mercado 03/01', 2);
+INSERT INTO tb_expense_detail (payment_date, real_value, expense_header_id, description, account_id) VALUES('11/01/2023', 120.16, 1, 'Mercado 11/01', 1);
+INSERT INTO tb_expense_credit_card (billing_date, account_id, expense_detail_id) VALUES('05/02/2023', 2, 1);
+INSERT INTO tb_expense_credit_card (billing_date, account_id, expense_detail_id) VALUES('05/02/2023', 3, 2);
+INSERT INTO tb_expense_credit_card_reserved (expense_credit_card_id, saved_account_id) VALUES(1, 3);
+INSERT INTO tb_expense_credit_card_reserved (expense_credit_card_id, saved_account_id) VALUES(2, 3);
