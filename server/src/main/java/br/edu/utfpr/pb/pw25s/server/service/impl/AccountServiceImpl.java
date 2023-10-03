@@ -22,7 +22,6 @@ public class AccountServiceImpl extends CrudServiceImpl<Account, Long>
         this.authService = authService;
     }
 
-
     @Override
     protected JpaRepository<Account, Long> getRepository() {
         return accountRepository;
@@ -34,7 +33,7 @@ public class AccountServiceImpl extends CrudServiceImpl<Account, Long>
         return super.save(entity);
     }
 
-    @Override//
+    @Override
     public Account findOne(Long aLong) {
         if(accountRepository.existsByIdAndUserId(aLong,
                 authService.getAuthenticatedUser().getId())){
