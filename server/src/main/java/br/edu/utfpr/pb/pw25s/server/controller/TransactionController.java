@@ -22,7 +22,7 @@ public class TransactionController extends CrudController<Transaction, Transacti
         TransactionController.modelMapper = modelMapper;
     }
 
-    @Override
+    @Override//
     protected ICrudService<Transaction, Long> getService() {
         return TransactionController.expenseDetailService;
     }
