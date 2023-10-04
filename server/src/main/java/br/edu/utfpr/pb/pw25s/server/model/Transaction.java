@@ -47,4 +47,8 @@ public class Transaction extends GenericModel {
     @Enumerated(EnumType.STRING)
     private EnumStatus status;
 
+    @NotNull
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private EnumType type;
 }
