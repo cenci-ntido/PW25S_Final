@@ -24,5 +24,5 @@ public class AccountDTO extends GenericDTO {
     @NotNull
     private Double savedMoney;
 
-    private UserDTO user;
+    private UserDTOResponse user;
 }
