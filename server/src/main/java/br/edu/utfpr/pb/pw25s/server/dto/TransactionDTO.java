@@ -4,6 +4,7 @@ import br.edu.utfpr.pb.pw25s.server.dto.generic.GenericDTO;
 import br.edu.utfpr.pb.pw25s.server.model.Account;
 import br.edu.utfpr.pb.pw25s.server.model.enums.EnumCategories;
 import br.edu.utfpr.pb.pw25s.server.model.enums.EnumStatus;
+import br.edu.utfpr.pb.pw25s.server.model.enums.EnumTypeTransaction;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -36,4 +37,7 @@ public class TransactionDTO extends GenericDTO {
 
     @NotNull
     private EnumStatus status;
+
+    @NotNull
+    private EnumTypeTransaction typeTransaction;
 }

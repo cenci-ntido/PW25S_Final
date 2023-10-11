@@ -2,6 +2,7 @@ package br.edu.utfpr.pb.pw25s.server.model;
 
 import br.edu.utfpr.pb.pw25s.server.model.enums.EnumCategories;
 import br.edu.utfpr.pb.pw25s.server.model.enums.EnumStatus;
+import br.edu.utfpr.pb.pw25s.server.model.enums.EnumTypeTransaction;
 import br.edu.utfpr.pb.pw25s.server.model.generic.GenericModel;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -50,5 +51,5 @@ public class Transaction extends GenericModel {
     @NotNull
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private EnumType type;
+    private EnumTypeTransaction typeTransaction;
 }

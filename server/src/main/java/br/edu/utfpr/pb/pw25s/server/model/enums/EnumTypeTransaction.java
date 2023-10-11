@@ -1,6 +1,6 @@
 package br.edu.utfpr.pb.pw25s.server.model.enums;
 
-public enum EnumType {
+public enum EnumTypeTransaction {
     REVENUE,
     EXPENSE
 
