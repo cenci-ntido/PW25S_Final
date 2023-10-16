@@ -41,6 +41,7 @@ public class AccountServiceImpl extends CrudServiceImpl<Account, Long>
                     authService.getAuthenticatedUser().getId());
         }else{
             throw new RuntimeException("Conta não encontrada para seu usuário!");
+
         }
     }
 

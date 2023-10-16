@@ -252,7 +252,7 @@ public class UserControllerTest {
         return testRestTemplate.postForEntity(API_USERS, request, responseType);
     }
 
-    private User createValidUser() {
+    public User createValidUser() {
         User user = new User();
         user.setUsername("test-user");
         user.setDisplayName("test-display");
