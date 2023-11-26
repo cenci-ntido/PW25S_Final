@@ -1,11 +1,10 @@
-
-export interface IUserSignUp {
-    displayName: string;
+export interface IUserLogin {
     username: string;
     password: string;
 }
 
-export interface IUserLogin {
+export interface IUserSignup {
+    displayName: string;
     username: string;
     password: string;
 }
@@ -13,7 +12,6 @@ export interface IUserLogin {
 export interface ICategory {
     id?: number;
     name: string;
-    testDate?: Date;
 }
 
 export interface IProduct {
@@ -22,4 +20,4 @@ export interface IProduct {
     description: string;
     price: number;
     category: ICategory;
-  }
+}

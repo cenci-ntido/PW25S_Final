@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { ICategory, IProduct } from "@/commons/interfaces";
+import CategoryService from "@/services/CategoryService";
+import ProductService from "@/services/ProductService";
 import {
   FormErrorMessage,
   FormLabel,
@@ -10,9 +12,7 @@ import {
   Select,
   Button,
 } from "@chakra-ui/react";
-import CategoryService from "@/service/CategoryService";
-import ProductService from "@/service/ProductService";
-import { ICategory, IProduct } from "@/commons/interfaces";
+import { useForm } from "react-hook-form";
 
 export function ProductFormPageV2() {
   const {
@@ -22,9 +22,9 @@ export function ProductFormPageV2() {
     reset,
   } = useForm<IProduct>();
   const [apiError, setApiError] = useState("");
+  const [categories, setCategories] = useState<ICategory[]>([]);
   const navigate = useNavigate();
   const { id } = useParams();
-  const [categories, setCategories] = useState<ICategory[]>([]);
   const [entity, setEntity] = useState<IProduct>({
     id: undefined,
     name: "",
@@ -38,6 +38,10 @@ export function ProductFormPageV2() {
     loadData();
   }, []);
 
+  useEffect(() => {
+    reset(entity);
+  }, [entity, reset]);
+
   const loadData = async () => {
     // Busca a lista de categorias
     await CategoryService.findAll()
@@ -46,15 +50,15 @@ export function ProductFormPageV2() {
         setCategories(response.data);
         setApiError("");
       })
-      .catch((erro) => {
+      .catch(() => {
         setApiError("Falha ao carregar a combo de categorias.");
       });
+
     if (id) {
       // ao editar um produto, busca ele no back-end e carrega no objeto form que está no state.
-      ProductService.findOne(parseInt(id))
+      ProductService.findById(parseInt(id))
         .then((response) => {
           if (response.data) {
-            console.log(response.data);
             setEntity({
               id: response.data.id,
               name: response.data.name,
@@ -64,26 +68,21 @@ export function ProductFormPageV2() {
             });
             setApiError("");
           } else {
-            setApiError("Falha ao carregar o produto.");
+            setApiError("Falha ao carregar o produto");
           }
         })
-        .catch((error) => {
-          setApiError("Falha ao carregar o produto.");
+        .catch(() => {
+          setApiError("Falha ao carregar o produto");
         });
     } else {
-      // ao cadastrar um novo produto, valoriza no objeto form a primeira categoria do select
       setEntity((previousEntity) => {
         return {
           ...previousEntity,
-          category: { id: categories[0].id, name: "" },
+          category: { id: categories[0]?.id, name: "" },
         };
       });
     }
   };
-
-  useEffect(() => {
-    reset(entity);
-  }, [entity, reset]);
 
   const onSubmit = (data: IProduct) => {
     const product: IProduct = {
@@ -91,109 +90,118 @@ export function ProductFormPageV2() {
       id: entity.id,
       category: { id: data.category.id, name: "" },
     };
+
     ProductService.save(product)
-      .then((response) => {
-        navigate("/product-v2");
+      .then(() => {
+        navigate("/products-v2");
       })
-      .catch((error) => {
+      .catch(() => {
         setApiError("Falha ao salvar o produto.");
       });
   };
 
   return (
-    <div className="container">
-      <h1 className="fs-2 text-center">Cadastro de Produto - V2s</h1>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FormControl isInvalid={errors.name && true}>
-          <FormLabel htmlFor="name">Nome</FormLabel>
-          <Input
-            id="name"
-            placeholder="Nome do produto"
-            {...register("name", {
-              required: "O campo nome é obrigatório",
-            })}
-          />
-          <FormErrorMessage>
-            {errors.name && errors.name.message}
-          </FormErrorMessage>
-        </FormControl>
-        <FormControl isInvalid={errors.price && true}>
-          <FormLabel htmlFor="price">Preço</FormLabel>
-          <Input
-            id="price"
-            placeholder="0.0"
-            {...register("price", {
-              required: "O campo preço é obrigatório",
-              min: { value: 0.01, message: "O valor deve ser maior que zero" },
-            })}
-            type="number"
-            step="any"
-          />
+    <>
+      <div className="container">
+        <h1 className="fs-2 text-center">Cadastro de Produto - V2</h1>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <FormControl isInvalid={errors.name && true}>
+            <FormLabel htmlFor="name">Nome</FormLabel>
+            <Input
+              id="name"
+              placeholder="Nome do produto"
+              {...register("name", {
+                required: "O campo nome é obrigatório",
+              })}
+            />
+            <FormErrorMessage>
+              {errors.name && errors.name.message}
+            </FormErrorMessage>
+          </FormControl>
 
-          <FormErrorMessage>
-            {errors.price && errors.price.message}
-          </FormErrorMessage>
-        </FormControl>
+          <FormControl isInvalid={errors.price && true}>
+            <FormLabel htmlFor="price">Preço</FormLabel>
+            <Input
+              id="price"
+              placeholder="0.0"
+              {...register("price", {
+                required: "O campo preço é obrigatório",
+                min: {
+                  value: 0.01,
+                  message: "O valor deve ser maior que zero",
+                },
+              })}
+              type="number"
+              step="any"
+            />
 
-        <FormControl isInvalid={errors.description && true}>
-          <FormLabel htmlFor="description">Descrição</FormLabel>
-          <Textarea
-            id="description"
-            placeholder="Descrição do produto"
-            {...register("description", {
-              required: "O campo descrição é obrigatório",
-              minLength: {
-                value: 2,
-                message: "O tamanho deve ser entre 2 e 1024 caracteres",
-              },
-              maxLength: {
-                value: 1024,
-                message: "O tamanho deve ser entre 2 e 1024 caracteres",
-              },
-            })}
-            size="sm"
-          />
-          <FormErrorMessage>
-            {errors.description && errors.description.message}
-          </FormErrorMessage>
-        </FormControl>
+            <FormErrorMessage>
+              {errors.price && errors.price.message}
+            </FormErrorMessage>
+          </FormControl>
 
-        <FormControl isInvalid={errors.category && true}>
-          <FormLabel htmlFor="category">Categoria</FormLabel>
+          <FormControl isInvalid={errors.description && true}>
+            <FormLabel htmlFor="description">Descrição</FormLabel>
+            <Textarea
+              id="description"
+              maxLength={1024}
+              placeholder="Descrição do produto"
+              {...register("description", {
+                required: "O campo descrição é obrigatório",
+                minLength: {
+                  value: 2,
+                  message: "O tamanho deve ser entre 2 e 1024 caracteres",
+                },
+                maxLength: {
+                  value: 1024,
+                  message: "O tamanho deve ser entre 2 e 1024 caracteres",
+                },
+              })}
+              size="sm"
+            />
+            <FormErrorMessage>
+              {errors.description && errors.description.message}
+            </FormErrorMessage>
+          </FormControl>
 
-          <Select
-            id="category"
-            {...register("category.id", {
-              required: "O campo categoria é obrigatório",
-            })}
-            size="sm"
-          >
-            {categories.map((category: ICategory) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </Select>
+          <FormControl isInvalid={errors.category && true}>
+            <FormLabel htmlFor="category">Categoria</FormLabel>
 
-          <FormErrorMessage>
-            {errors.description && errors.description.message}
-          </FormErrorMessage>
-        </FormControl>
+            <Select
+              id="category"
+              {...register("category.id", {
+                required: "O campo categoria é obrigatório",
+              })}
+              size="sm"
+            >
+              {categories.map((category: ICategory) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </Select>
+
+            <FormErrorMessage>
+              {errors.description && errors.description.message}
+            </FormErrorMessage>
+          </FormControl>
+
+          <div className="text-center">
+            <Button
+              mt={4}
+              colorScheme="teal"
+              isLoading={isSubmitting}
+              type="submit"
+            >
+              Salvar
+            </Button>
+          </div>
+        </form>
+        {apiError && <div className="alert alert-danger">{apiError}</div>}
         <div className="text-center">
-          <Button
-            mt={4}
-            colorScheme="teal"
-            isLoading={isSubmitting}
-            type="submit"
-          >
-            Salvar
-          </Button>
+          <Link to="/products-v2">Voltar</Link>
         </div>
-      </form>
-      {apiError && <div className="alert alert-danger">{apiError}</div>}
-      <div className="text-center">
-        <Link to="/product-v2">Voltar</Link>
       </div>
-    </div>
+    </>
   );
 }

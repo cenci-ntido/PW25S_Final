@@ -1,46 +1,41 @@
-import { ChangeEvent } from 'react';
-
-interface IInputProps {
-    name: string;
-    className: string;
-    label: string;
-    type: string;
-    placeholder: string;
-    value: string;
-    hasError: boolean;
-    error: string;
-    onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+interface InputProps {
+  name: string;
+  className: string;
+  label: string;
+  type: string;
+  placeholder: string;
+  value: string;
+  hasError: boolean;
+  error: string;
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
-
-export function Input(
-    { name,
-        className,
-        label,
-        type,
-        placeholder,
-        value,
-        hasError,
-        error,
-        onChange, }: IInputProps
-) {
-    let inputClassName = className;
-    if (hasError) {
-        inputClassName += hasError ? " is-invalid" : " is-valid";
-    }
-
-
-    return (
-        <div>
-            {label && <label>{label}</label>}
-            <input
-                type={type}
-                className={inputClassName}
-                placeholder={placeholder}
-                onChange={onChange}
-                value={value}
-                name={name}
-            />
-            {hasError && <div className="invalid-feedback">{error}</div>}
-        </div>
-    )
+export function Input({
+  name,
+  className,
+  label,
+  type,
+  placeholder,
+  value,
+  hasError,
+  error,
+  onChange,
+}: InputProps) {
+  let inputClassName = className;
+  if (hasError !== undefined) {
+    inputClassName += hasError ? " is-invalid" : " is-valid";
+  }
+  return (
+    <>
+      <input
+        name={name}
+        className={inputClassName}
+        type={type}
+        placeholder={placeholder}
+        onChange={onChange}
+        value={value}
+      />      
+      {label && <label htmlFor={name}>{label}</label>}
+      {hasError && <div className="invalid-feedback">{error}</div>}
+    </>
+  );
 }

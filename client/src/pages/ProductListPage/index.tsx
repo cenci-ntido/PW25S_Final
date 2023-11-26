@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { IProduct } from "@/commons/interfaces";
-import ProductService from "@/service/ProductService";
+import ProductService from "@/services/ProductService";
 
 export function ProductListPage() {
   const [data, setData] = useState<IProduct[]>([]);
@@ -18,20 +18,22 @@ export function ProductListPage() {
         setData(response.data);
         setApiError("");
       })
-      .catch((error) => {
+      .catch(() => {
         setApiError("Falha ao carregar a lista de produtos");
       });
   };
 
   const onRemove = (id: number) => {
     ProductService.remove(id)
-      .then((response) => {
+      .then(() => {
         setShowDeleteMessage(true);
         loadData();
-        setTimeout(() => { setShowDeleteMessage(false) }, 1500);
+        setTimeout(() => {
+          setShowDeleteMessage(false);
+        }, 1500);
         setApiError("");
       })
-      .catch((erro) => {
+      .catch(() => {
         setApiError("Falha ao remover o produto");
       });
   };
@@ -81,7 +83,11 @@ export function ProductListPage() {
         </tbody>
       </table>
       {apiError && <div className="alert alert-danger">{apiError}</div>}
-      {showDeleteMessage && <div className="alert alert-success">Registro removido com sucesso!</div>}
+      {showDeleteMessage && (
+        <div className="alert alert-success">
+          Registro removido com sucesso!
+        </div>
+      )}
     </div>
   );
 }
