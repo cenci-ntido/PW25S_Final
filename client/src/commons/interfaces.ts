@@ -15,10 +15,13 @@ export interface IAccount {
     savedMoney: number;
 }
 
-export interface IProduct {
+export interface ITransaction {
     id?: number;
-    name: string;
     description: string;
-    price: number;
-    category: ICategory;
+    realValue: number;
+    date: Date;
+    account: IAccount;
+    category: string;
+    status: string;
+    type: string;
 }

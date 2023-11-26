@@ -917,7 +917,7 @@ export  function CategoryFormPage() {
 ```
 
 ##### CRUD de Produtos
-A lista e cadastro de produtos segue a mesma lógica dos componentes de categorias. Sendo os componentes **ProductListPage**, **ProductFormPage** e o service **ProductService** responsáveis pelo correto funcionamento dessas telas.
+A lista e cadastro de produtos segue a mesma lógica dos componentes de categorias. Sendo os componentes **ProductListPage**, **ProductFormPage** e o service **TransactionService** responsáveis pelo correto funcionamento dessas telas.
 
 #### Biblioteca para Formulário (React Hook Forms [7]), Interface Gráfica (Chakra UI [8]) e ícones (React Icons [9])
 
@@ -955,12 +955,12 @@ export  function App() {
 ```
 Agora é possível utilizar as funcionalidades disponíveis nesses bibliotecas nos componentes desenvolvidos. Abaixo está o código do componente **ProductListPageV2**, que exibe uma lista de produtos. Diferente dos componentes de lista anteiores, agora a tabela exibida não é mais uma tag HTML `<table>` e sim um componente do **Chakra UI** `<Table>`, que permite personalizações, por exemplo, o menu exibido com as ações de editar e remover, os quais também são componentes do Chakra UI e possuem ícones vindos do **React Icons**, como pode ser observado nas importações das dependências. 
 
-O processo para busca dos dados, por meio do **ProductService** e de criação da tabela, percorrendo a lista vinda da API, é semelhante ao componente de lista de categorias, mudando apenas o componente que será exibido ao usuário, nesse caso a `<Table>` do Chakra UI.
+O processo para busca dos dados, por meio do **TransactionService** e de criação da tabela, percorrendo a lista vinda da API, é semelhante ao componente de lista de categorias, mudando apenas o componente que será exibido ao usuário, nesse caso a `<Table>` do Chakra UI.
 
 ```ts
 import { useState, useEffect } from  "react";
 import { Link, useNavigate } from  "react-router-dom";
-import ProductService from  "@/service/ProductService";
+import TransactionService from  "@/service/TransactionService";
 import {Table,Thead,Tbody,Tfoot,Tr,Th,Td,TableCaption,TableContainer,Menu,MenuButton,MenuList,MenuItem,IconButton,} from  "@chakra-ui/react";
 import {BsThreeDotsVertical,BsPencilSquare,BsTrash,BsPlusCircle,} from  "react-icons/bs";
 import { IProduct } from  "@/commons/interfaces";
@@ -973,7 +973,7 @@ export  function ProductListPageV2() {
 		loadData();
 	}, []);
 	const loadData = () => {
-		ProductService.findAll()
+		TransactionService.findAll()
 			.then((response) => {
 				setData(response.data);
 				setApiError("");
@@ -986,7 +986,7 @@ export  function ProductListPageV2() {
 		navigate(url);
 	}
 	const onRemove = (id: number) => {
-		ProductService.remove(id)
+		TransactionService.remove(id)
 			.then((response) => {
 				loadData();
 				setApiError("");})
@@ -1067,7 +1067,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import AccountService from "../../service/AccountService";
-import ProductService from "../../service/ProductService";
+import TransactionService from "../../service/TransactionService";
 import { ICategory, IProduct } from "../../commons/interfaces";
 
 export function ProductFormPageV2() {
@@ -1097,7 +1097,7 @@ export function ProductFormPageV2() {
       .then((response) => {
         setCategories(response.data);
         if (id) { // no caso de edição, carrega o produto a ser editado
-          ProductService.findOne(parseInt(id))
+          TransactionService.findOne(parseInt(id))
             .then((response) => {
               if (response.data) {
                 setEntity({
@@ -1141,7 +1141,7 @@ export function ProductFormPageV2() {
       id: entity.id,
       category: { id: data.category.id, name: "" },
     };
-    ProductService.save(product)
+    TransactionService.save(product)
       .then((response) => {
         navigate("/product-v2");
       })

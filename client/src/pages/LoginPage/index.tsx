@@ -1,7 +1,7 @@
 import { IUserLogin } from "@/commons/interfaces";
 import { ButtonWithProgress } from "@/components/ButtonWithProgress";
 import { Input } from "@/components/Input";
-import AuthService from "@/services/AuthService";
+import AuthService from "@/service/AuthService";
 import { ChangeEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 

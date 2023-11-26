@@ -1,7 +1,7 @@
 import { IUserSignup } from "@/commons/interfaces";
 import { ButtonWithProgress } from "@/components/ButtonWithProgress";
 import { Input } from "@/components/Input";
-import AuthService from "@/services/AuthService";
+import AuthService from "@/service/AuthService";
 import { ChangeEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -121,7 +121,7 @@ export function UserSignupPage() {
 
           <ButtonWithProgress
             disabled={pendingApiCall}
-            className="w-100 btn btn-lg btn-primary mb-3"
+            // className="w-100 btn btn-lg btn-primary mb-3"
             onClick={onClickSignup}
             pendingApiCall={pendingApiCall}
             text="Cadastrar"

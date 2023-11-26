@@ -5,10 +5,10 @@ import { Route, Routes } from "react-router-dom";
 import { AuthenticatedRoutes } from "../AuthenticatedRoutes";
 import { AccountListPage } from "@/pages/AccountListPage";
 import { AccountFormPage } from "@/pages/AccountForm";
-import { ProductListPage } from "@/pages/ProductListPage";
-import { ProductFormPage } from "@/pages/ProductFormPage";
-import { ProductListPageV2 } from "@/pages/ProductListPageV2";
-import { ProductFormPageV2 } from "@/pages/ProductFormPageV2";
+// import { ProductListPage } from "@/pages/ProductListPage";
+// import { ProductFormPage } from "@/pages/ProductFormPage";
+import { TransactionListPage } from "@/pages/TransactionListPage";
+// import { TransactionFormPage } from "@/pages/ProductFormPageV2";
 
 export function BaseRoutes() {
   return (
@@ -26,14 +26,14 @@ export function BaseRoutes() {
                     <Route path="/accounts/new" element={<AccountFormPage />} />
                     <Route path="/accounts/:id" element={<AccountFormPage />} />
 
-                <Route path="/products" element={<ProductListPage />} />
-                <Route path="/products/new" element={<ProductFormPage />} />
-                <Route path="/products/:id" element={<ProductFormPage />} />
+                <Route path="/transactions" element={<TransactionListPage />} />
+                <Route path="/transactions/new" element={<TransactionListPage />} />
+                <Route path="/transactions/:id" element={<TransactionListPage />} />
 
-                <Route path="/products-v2" element={<ProductListPageV2 />} />
+                <Route path="/transactions-v2" element={<TransactionListPage />} />
 
-                <Route path="/products-v2/new" element={<ProductFormPageV2 />} />
-                <Route path="/products-v2/:id" element={<ProductFormPageV2 />} />
+                {/*<Route path="/transactions-v2/new" element={<ProductFormPageV2 />} />*/}
+                {/*<Route path="/transactions-v2/:id" element={<ProductFormPageV2 />} />*/}
             </Route>
         </Routes>
     </>

@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import AccountService from "@/services/AccountService.ts";
+import AccountService from "@/service/AccountService.ts";
 import {IAccount} from "@/commons/interfaces";
 import {Link} from "react-router-dom";
 import {Button} from "@chakra-ui/react";

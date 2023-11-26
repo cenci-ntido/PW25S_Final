@@ -1,5 +1,5 @@
 import {NavLink} from "react-router-dom";
-import AuthService from "@/services/AuthService";
+import AuthService from "@/service/AuthService";
 import {
     Tabs,
     TabList,

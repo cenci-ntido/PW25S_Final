@@ -1,5 +1,5 @@
 import { NavBar } from "@/components/NavBar";
-import AuthService from "@/services/AuthService";
+import AuthService from "@/service/AuthService";
 import { Navigate, Outlet } from "react-router-dom";
 
 export function AuthenticatedRoutes() {

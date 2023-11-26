@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ICategory, IProduct } from "@/commons/interfaces";
 import AccountService from "@/services/AccountService.ts";
-import ProductService from "@/services/ProductService";
+import TransactionService from "@/services/TransactionService.ts";
 import {
   FormErrorMessage,
   FormLabel,
@@ -56,7 +56,7 @@ export function ProductFormPageV2() {
 
     if (id) {
       // ao editar um produto, busca ele no back-end e carrega no objeto form que está no state.
-      ProductService.findById(parseInt(id))
+      TransactionService.findById(parseInt(id))
         .then((response) => {
           if (response.data) {
             setEntity({
@@ -91,7 +91,7 @@ export function ProductFormPageV2() {
       category: { id: data.category.id, name: "" },
     };
 
-    ProductService.save(product)
+    TransactionService.save(product)
       .then(() => {
         navigate("/products-v2");
       })

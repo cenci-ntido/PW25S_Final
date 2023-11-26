@@ -2,7 +2,7 @@ import {ChangeEvent, useState, useEffect} from "react";
 import {ButtonWithProgress} from "@/components/ButtonWithProgress";
 import {Input} from "@/components/Input";
 import {IAccount} from "@/commons/interfaces";
-import AccountService from "@/services/AccountService.ts";
+import AccountService from "@/service/AccountService.ts";
 import {useNavigate, useParams} from "react-router-dom";
 
 export function AccountFormPage() {
