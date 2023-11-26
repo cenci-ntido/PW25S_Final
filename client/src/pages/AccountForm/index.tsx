@@ -119,7 +119,7 @@ export function AccountFormPage() {
                     )}
 
                     <ButtonWithProgress
-                        className="w-100 btn btn-lg btn-primary mb-3"
+                        // className="w-100 btn btn-lg btn-primary mb-3"
                         onClick={onSubmit}
                         disabled={pendingApiCall ? true : false}
                         pendingApiCall={pendingApiCall}

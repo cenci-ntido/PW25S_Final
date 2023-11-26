@@ -1,5 +1,7 @@
+import {Button} from "@chakra-ui/react";
+
 interface IButtonWithProgress {
-    className: string;
+    // className: string;
     disabled: boolean;
     pendingApiCall: boolean;
     text: string;
@@ -7,7 +9,7 @@ interface IButtonWithProgress {
   }
 
 export function ButtonWithProgress({
-    className,
+    // className,
     disabled,
     pendingApiCall,
     text,
@@ -15,10 +17,12 @@ export function ButtonWithProgress({
   }: IButtonWithProgress) {
   
     return (
-      <button
+      <Button
         disabled={disabled}
-        className={className || "btn btn-primary"}
+        // className={className || "btn btn-primary"}
         onClick={onClick}
+        colorScheme={"teal"}
+        width={'100%'}
       >
         {pendingApiCall && (
           <div
@@ -29,6 +33,6 @@ export function ButtonWithProgress({
           </div>
         )}
         {text}
-      </button>
+      </Button>
     );
   }
