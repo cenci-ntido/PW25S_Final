@@ -114,7 +114,7 @@ export function AccountFormPage() {
                     </div>
                     {apiError && (
                         <div className="alert alert-danger">
-                            Falha ao cadastrar a categoria.
+                            Falha ao cadastrar conta.
                         </div>
                     )}
 

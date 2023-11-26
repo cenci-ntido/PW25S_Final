@@ -1,3 +1,5 @@
+import {Input as InputChakra} from "@chakra-ui/react";
+
 interface InputProps {
   name: string;
   className: string;
@@ -26,7 +28,7 @@ export function Input({
   }
   return (
     <>
-      <input
+      <InputChakra
         name={name}
         className={inputClassName}
         type={type}
