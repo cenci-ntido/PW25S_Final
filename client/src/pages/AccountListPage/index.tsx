@@ -42,8 +42,8 @@ export function AccountListPage() {
           <h1 className="h3 mb-3 fw-normal">Lista de Contas</h1>
         </div>
         <div className="text-center">
-          <Link className="btn btn-success" to="/categories/new">
-            Nova Categoria
+          <Link className="btn btn-success" to="/accounts/new">
+            Nova Conta
           </Link>
         </div>
         {apiError && <div className="alert alert-danger">{apiError}</div>}
@@ -58,15 +58,15 @@ export function AccountListPage() {
             </tr>
           </thead>
           <tbody>
-            {data.map((category: IAccount) => (
-              <tr key={category.id}>
-                <td>{category.id}</td>
-                <td>{category.description}</td>
-                <td>{category.savedMoney}</td>
+            {data.map((account: IAccount) => (
+              <tr key={account.id}>
+                <td>{account.id}</td>
+                <td>{account.description}</td>
+                <td>{account.savedMoney}</td>
                 <td>
                   <Link
                     className="btn btn-primary"
-                    to={`/categories/${category.id}`}
+                    to={`/accounts/${account.id}`}
                   >
                     Editar
                   </Link>
@@ -74,7 +74,7 @@ export function AccountListPage() {
                 <td>
                   <button
                     className="btn btn-danger"
-                    onClick={() => onClickRemove(category.id)}
+                    onClick={() => onClickRemove(account.id)}
                   >
                     Remover
                   </button>

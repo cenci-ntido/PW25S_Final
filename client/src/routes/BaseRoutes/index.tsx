@@ -4,7 +4,7 @@ import { UserSignupPage} from "@/pages/UserSignUpPage";
 import { Route, Routes } from "react-router-dom";
 import { AuthenticatedRoutes } from "../AuthenticatedRoutes";
 import { AccountListPage } from "@/pages/AccountListPage";
-// import { AccountFormPage } from "@/pages/AccountFormPage";
+import { AccountFormPage } from "@/pages/AccountForm";
 import { ProductListPage } from "@/pages/ProductListPage";
 import { ProductFormPage } from "@/pages/ProductFormPage";
 import { ProductListPageV2 } from "@/pages/ProductListPageV2";
@@ -23,8 +23,8 @@ export function BaseRoutes() {
                 <Route path="/" element={<HomePage />} />
 
                 <Route path="/accounts" element={<AccountListPage />} />
-                    {/*<Route path="/accounts/new" element={<AccountFormPage />} />*/}
-                    {/*<Route path="/accounts/:id" element={<AccountFormPage />} />*/}
+                    <Route path="/accounts/new" element={<AccountFormPage />} />
+                    <Route path="/accounts/:id" element={<AccountFormPage />} />
 
                 <Route path="/products" element={<ProductListPage />} />
                 <Route path="/products/new" element={<ProductFormPage />} />
