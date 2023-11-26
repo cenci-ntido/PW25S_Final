@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import CategoryService from "@/services/CategoryService";
+import AccountService from "@/services/AccountService.ts";
 import { ICategory } from "@/commons/interfaces";
 import { Link } from "react-router-dom";
 
@@ -12,7 +12,7 @@ export function CategoryListPage() {
   }, []);
 
   const loadData = () => {
-    CategoryService.findAll()
+    AccountService.findAll()
       .then((response) => {
         setData(response.data);
       })
@@ -23,7 +23,7 @@ export function CategoryListPage() {
 
   const onClickRemove = (id?: number) => {
     if (id) {
-      CategoryService.remove(id)
+      AccountService.remove(id)
         .then(() => {
           loadData();
           setApiError("");

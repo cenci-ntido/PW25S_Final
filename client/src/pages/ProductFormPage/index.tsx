@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { ICategory, IProduct } from "@/commons/interfaces";
 import { ButtonWithProgress } from "@/components/ButtonWithProgress";
 import { Input } from "@/components/Input";
-import CategoryService from "@/services/CategoryService";
+import AccountService from "@/services/AccountService.ts";
 import ProductService from "@/services/ProductService";
 
 export function ProductFormPage() {
@@ -39,7 +39,7 @@ export function ProductFormPage() {
 
   const loadData = async () => {
     // Busca a lista de categorias
-    await CategoryService.findAll()
+    await AccountService.findAll()
       .then((response) => {
         // caso sucesso, adiciona a lista no state
         setCategories(response.data);

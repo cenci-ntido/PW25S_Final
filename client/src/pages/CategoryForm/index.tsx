@@ -2,7 +2,7 @@ import { ChangeEvent, useState, useEffect } from "react";
 import { ButtonWithProgress } from "@/components/ButtonWithProgress";
 import { Input } from "@/components/Input";
 import { ICategory } from "@/commons/interfaces";
-import CategoryService from "@/services/CategoryService";
+import AccountService from "@/services/AccountService.ts";
 import { useNavigate, useParams } from "react-router-dom";
 
 export function CategoryFormPage() {
@@ -21,7 +21,7 @@ export function CategoryFormPage() {
 
   useEffect(() => { 
     if (id) {
-        CategoryService.findById(parseInt(id))
+        AccountService.findById(parseInt(id))
             .then((response) => {
                 if (response.data) {
                     setForm({
@@ -59,7 +59,7 @@ export function CategoryFormPage() {
       name: form.name
     };
     setPendingApiCall(true);
-    CategoryService.save(category)
+    AccountService.save(category)
       .then((response) => {
         console.log(response);
         setPendingApiCall(false);

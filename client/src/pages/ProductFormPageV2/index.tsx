@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ICategory, IProduct } from "@/commons/interfaces";
-import CategoryService from "@/services/CategoryService";
+import AccountService from "@/services/AccountService.ts";
 import ProductService from "@/services/ProductService";
 import {
   FormErrorMessage,
@@ -44,7 +44,7 @@ export function ProductFormPageV2() {
 
   const loadData = async () => {
     // Busca a lista de categorias
-    await CategoryService.findAll()
+    await AccountService.findAll()
       .then((response) => {
         // caso sucesso, adiciona a lista no state
         setCategories(response.data);

@@ -9,9 +9,10 @@ export interface IUserSignup {
     password: string;
 }
 
-export interface ICategory {
+export interface IAccount {
     id?: number;
-    name: string;
+    description: string;
+    savedMoney: number;
 }
 
 export interface IProduct {
