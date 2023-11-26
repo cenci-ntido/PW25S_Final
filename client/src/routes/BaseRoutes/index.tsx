@@ -1,10 +1,10 @@
 import { HomePage } from "@/pages/HomePage";
 import { LoginPage } from "@/pages/LoginPage";
-import { UserSignupPage } from "@/pages/UserSignupPage";
+import { UserSignupPage} from "@/pages/UserSignUpPage";
 import { Route, Routes } from "react-router-dom";
 import { AuthenticatedRoutes } from "../AuthenticatedRoutes";
-import { CategoryListPage } from "@/pages/CategoryListPage";
-import { CategoryFormPage } from "@/pages/CategoryForm";
+import { AccountListPage } from "@/pages/AccountListPage";
+// import { AccountFormPage } from "@/pages/AccountFormPage";
 import { ProductListPage } from "@/pages/ProductListPage";
 import { ProductFormPage } from "@/pages/ProductFormPage";
 import { ProductListPageV2 } from "@/pages/ProductListPageV2";
@@ -22,9 +22,9 @@ export function BaseRoutes() {
             <Route element={<AuthenticatedRoutes />}>
                 <Route path="/" element={<HomePage />} />
 
-                <Route path="/categories" element={<CategoryListPage />} />
-                <Route path="/categories/new" element={<CategoryFormPage />} />
-                <Route path="/categories/:id" element={<CategoryFormPage />} />
+                <Route path="/accounts" element={<AccountListPage />} />
+                    {/*<Route path="/accounts/new" element={<AccountFormPage />} />*/}
+                    {/*<Route path="/accounts/:id" element={<AccountFormPage />} />*/}
 
                 <Route path="/products" element={<ProductListPage />} />
                 <Route path="/products/new" element={<ProductFormPage />} />

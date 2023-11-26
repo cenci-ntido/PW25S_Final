@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import AccountService from "@/services/AccountService.ts";
-import { ICategory } from "@/commons/interfaces";
+import { IAccount } from "@/commons/interfaces";
 import { Link } from "react-router-dom";
 
-export function CategoryListPage() {
+export function AccountListPage() {
   const [data, setData] = useState([]);
   const [apiError, setApiError] = useState("");
 
@@ -39,7 +39,7 @@ export function CategoryListPage() {
     <>
       <main className="container">
         <div className="text-center">
-          <h1 className="h3 mb-3 fw-normal">Lista de Categorias</h1>
+          <h1 className="h3 mb-3 fw-normal">Lista de Contas</h1>
         </div>
         <div className="text-center">
           <Link className="btn btn-success" to="/categories/new">
@@ -52,15 +52,17 @@ export function CategoryListPage() {
             <tr>
               <td>#</td>
               <td>Nome</td>
+              <td>Dinheiro Guardado</td>
               <td>Editar</td>
               <td>Remover</td>
             </tr>
           </thead>
           <tbody>
-            {data.map((category: ICategory) => (
+            {data.map((category: IAccount) => (
               <tr key={category.id}>
                 <td>{category.id}</td>
-                <td>{category.name}</td>
+                <td>{category.description}</td>
+                <td>{category.savedMoney}</td>
                 <td>
                   <Link
                     className="btn btn-primary"

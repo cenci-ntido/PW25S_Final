@@ -646,7 +646,7 @@ export function HomePage() {
 ```
 ##### CRUD de Categorias
 
-Com o cadastro de usuário e tela de autenticação funcionando serão adicionadas as operações CRUD de categoria. Inicialmente será criado o service de categoria dentro da pasta **service** criar o arquivo **CategoryService.ts**. Esse service vai ter as funções **save, 	findAll, remove e	findById**, todas utilizam o **axios** por meio do objeto **api**. Todas essas requisições necessitam de autenticação, entretanto, como o **token jwt** já foi adicionado ao cabeçalho das requisições na função **isAuthenticaded**, não é necessário fazer isso novamente. 
+Com o cadastro de usuário e tela de autenticação funcionando serão adicionadas as operações CRUD de categoria. Inicialmente será criado o service de categoria dentro da pasta **service** criar o arquivo **AccountService.ts**. Esse service vai ter as funções **save, 	findAll, remove e	findById**, todas utilizam o **axios** por meio do objeto **api**. Todas essas requisições necessitam de autenticação, entretanto, como o **token jwt** já foi adicionado ao cabeçalho das requisições na função **isAuthenticaded**, não é necessário fazer isso novamente. 
 
 ```ts
 import { ICategory } from  '@/commons/interfaces';
@@ -664,14 +664,14 @@ const  remove = (id: number) => {
 const  findById = (id: number) => {
 	return  api.get(`/categories/${id}`);
 }
-const  CategoryService = {
+const  AccountService = {
 	save,
 	findAll,
 	remove,
 	findById,
 }
 
-export  default  CategoryService;
+export  default  AccountService;
 ```
 Nesse service também pode ser observado o uso da interface **Category** a qual será criada no arquivo **interfaces** dentro da pasta **commons**.
 
@@ -688,7 +688,7 @@ Agora será criado o componente para listar as categorias, dentro da pasta **pag
 import { useEffect, useState } from  'react';
 import { Link } from  'react-router-dom';
 import { ICategory } from  '@/commons/interfaces';
-import  CategoryService  from  '@/service/CategoryService';
+import  AccountService  from  '@/service/AccountService';
 
 export  function  CategoryListPage() {
 	const [data, setData] = useState<ICategory[]>([]);
@@ -700,7 +700,7 @@ export  function  CategoryListPage() {
 
 	const  loadData = () => {
 		//O método findAll do service faz chamada a API e retorna uma lista com todas as categorias cadastradas
-		CategoryService.findAll()
+		AccountService.findAll()
 			.then((response) => {
 				setData(response.data);
 				setApiError("");
@@ -712,7 +712,7 @@ export  function  CategoryListPage() {
 	// A função de remover recebe o ID registro que será removido e faz uma requisição à API por meio do service de categoria. Em caso de sucesso carrega a lista novamente.
 	const  onClickRemove = (id?: number) => {
 		if (id) {
-			CategoryService.remove(id)
+			AccountService.remove(id)
 				.then((response) => {
 					loadData();
 					setApiError("");
@@ -803,7 +803,7 @@ import { useNavigate, useParams } from  'react-router-dom';
 import { ICategory } from  '@/commons/interfaces';
 import { ButtonWithProgress } from  '@/components/ButtonWithProgress';
 import { Input } from  '@/components/Input';
-import CategoryService from  '@/service/CategoryService';
+import AccountService from  '@/service/AccountService';
 
 export  function CategoryFormPage() {
 	// Adiciona o objeto que irá armazenar a categoria no state
@@ -828,7 +828,7 @@ export  function CategoryFormPage() {
 	
 	useEffect(() => {
 		if (id) { // Caso seja edição de uma categoria
-			CategoryService.findById( parseInt(id) ) //Carrega a categoria no state
+			AccountService.findById( parseInt(id) ) //Carrega a categoria no state
 				.then((response) => {
 				if (response.data) {
 					setForm({
@@ -866,7 +866,7 @@ export  function CategoryFormPage() {
 			name: form.name,
 		}
 		setPendingApiCall(true);
-		CategoryService.save(category) // Executa o método save que recebe a categoria a ser salva e retorna uma promessa
+		AccountService.save(category) // Executa o método save que recebe a categoria a ser salva e retorna uma promessa
 			.then((response) => { //Em caso de sucesso retorna o usuário para lista de categorias
 				setPendingApiCall(false);
 				navigate('/categories');
@@ -1066,7 +1066,7 @@ import {
   Select,
   Button,
 } from "@chakra-ui/react";
-import CategoryService from "../../service/CategoryService";
+import AccountService from "../../service/AccountService";
 import ProductService from "../../service/ProductService";
 import { ICategory, IProduct } from "../../commons/interfaces";
 
@@ -1093,7 +1093,7 @@ export function ProductFormPageV2() {
   });
 
   useEffect(() => {
-    CategoryService.findAll() //Carrega a lista de categorias
+    AccountService.findAll() //Carrega a lista de categorias
       .then((response) => {
         setCategories(response.data);
         if (id) { // no caso de edição, carrega o produto a ser editado
