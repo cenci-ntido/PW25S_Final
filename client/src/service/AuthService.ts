@@ -7,15 +7,17 @@ const login = (user: IUserLogin) => {
 
 const isAuthenticated = () => {
     const token = localStorage.getItem('token');
-
+    if (token) {
+        api.defaults.headers.common['Authorization'] = `Bearer ${JSON.parse(token)}`;
+    }
     return token ? true : false;
 }
 
-const logout = () => { 
+const logout = () => {
     localStorage.removeItem('token');
 }
 
-const signup = (user: IUserSignup) => { 
+const signup = (user: IUserSignup) => {
     return api.post('/users', user);
 }
 
