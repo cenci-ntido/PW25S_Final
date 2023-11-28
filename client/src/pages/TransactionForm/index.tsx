@@ -1,13 +1,16 @@
 import {ChangeEvent, useState, useEffect} from "react";
 import {ButtonWithProgress} from "@/components/ButtonWithProgress";
 import {Input} from "@/components/Input";
-// import {IAccount} from "@/commons/interfaces";
-import {ITransaction} from "@/commons/interfaces";
-// import AccountService from "@/service/AccountService.ts";
+import {IAccount, ITransaction} from "@/commons/interfaces";
 import {useNavigate, useParams} from "react-router-dom";
 import TransactionService from "@/service/TransactionService.ts";
+import {Select} from "@chakra-ui/react";
+import {useForm} from "react-hook-form";
+import AccountService from "@/service/AccountService.ts";
 
 export function TransactionForm() {
+    const [types, setType] = useState();
+    const [accounts, setAccounts] = useState<IAccount[]>([]);
     const [form, setForm] = useState<ITransaction>({
         id: undefined,
         description: "",
@@ -18,6 +21,9 @@ export function TransactionForm() {
         category: "",
         account: {id: undefined, description: "", savedMoney: 0}
     });
+    const {
+        register,
+    } = useForm<ITransaction>();
     const [errors, setErrors] = useState({
         id: undefined,
         description: "",
@@ -34,6 +40,7 @@ export function TransactionForm() {
     const {id} = useParams();
 
     useEffect(() => {
+        loadData()
         if (id) {
             TransactionService.findById(parseInt(id))
                 .then((response) => {
@@ -46,8 +53,11 @@ export function TransactionForm() {
                             status: response.data.status,
                             date: response.data.date,
                             category: response.data.category,
-                            account: {id: response.data.account.id,
-                                description: response.data.account.description, savedMoney: response.data.account.savedMoney}
+                            account: {
+                                id: response.data.account.id,
+                                description: response.data.account.description,
+                                savedMoney: response.data.account.savedMoney
+                            }
                         });
                     }
                 })
@@ -55,6 +65,14 @@ export function TransactionForm() {
                     console.log(error);
                 })
         }
+        // else {
+        //     setForm((previousForm) => {
+        //         return {
+        //             ...previousEntity,
+        //             category: {id: categories[0]?.id, name: ""},
+        //         };
+        //     });
+        // }
     }, []);
 
     const onChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -72,6 +90,32 @@ export function TransactionForm() {
             };
         });
     };
+    const loadData = async () => {
+        // Busca a lista de categorias
+        await AccountService.findAll()
+            .then((response) => {
+                // caso sucesso, adiciona a lista no state
+                setAccounts(response.data);
+                setApiError(false);
+            })
+            .catch(() => {
+                setApiError(true);
+            });
+
+        await TransactionService.getenumtype()
+            .then((response) => {
+                // caso sucesso, adiciona a lista no state
+                setType(response.data);
+                console.log(types);
+                setApiError(false);
+            })
+            .catch(() => {
+                setApiError(true);
+            });
+
+
+    };
+
 
     const onSubmit = () => {
 
@@ -135,6 +179,33 @@ export function TransactionForm() {
                             error={errors.description}
                         />
                     </div>
+                    <div className="form-floating mb-3">
+                        <Select
+                            id="account"
+                            {...register("account.id", {
+                                required: "O campo conta é obrigatório",
+                            })}
+                            size="sm"
+                        >
+                            {accounts.map((account: IAccount) => (
+                                <option key={account.id} value={account.id}>
+                                    {account.description}
+                                </option>
+                            ))}
+                        </Select>
+                    </div>
+                    <div className="form-floating mb-3">
+                        <Select
+                            id="type"
+                        >
+                            {types.map((type: String) => (
+                                <option key={type.toString()} value={type.toString()}>
+                                    {type.toString()}
+                                </option>
+                            ))}
+                        </Select>
+                    </div>
+
                     {apiError && (
                         <div className="alert alert-danger">
                             Falha ao cadastrar conta.

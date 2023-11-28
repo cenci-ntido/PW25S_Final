@@ -21,12 +21,16 @@ const remove = (id: number) => {
   return api.delete(`/transactions/${id}`);
 };
 
+const getenumtype = () => {
+  return api.get("/transactions/enumtype");
+}
 const TransactionService = {
   save,
   findAll,
   findOne,
   findById,
   remove,
+  getenumtype
 };
 
 export default TransactionService;

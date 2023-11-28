@@ -2,11 +2,15 @@ package br.edu.utfpr.pb.pw25s.server.controller;
 
 import br.edu.utfpr.pb.pw25s.server.dto.TransactionDTO;
 import br.edu.utfpr.pb.pw25s.server.model.Transaction;
+import br.edu.utfpr.pb.pw25s.server.model.enums.EnumTypeTransaction;
 import br.edu.utfpr.pb.pw25s.server.service.ICrudService;
 import br.edu.utfpr.pb.pw25s.server.service.ITransactionService;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("transactions")
@@ -30,6 +34,14 @@ public class TransactionController extends CrudController<Transaction, Transacti
     @Override
     protected ModelMapper getModelMapper() {
         return TransactionController.modelMapper;
+    }
+
+    @RequestMapping("enumtype")
+    protected List<String> getTypeEnum (){
+        List<String> types = new ArrayList<>();
+        types.add(EnumTypeTransaction.EXPENSE.toString());
+        types.add(EnumTypeTransaction.REVENUE.toString());
+        return types;
     }
 }
 
