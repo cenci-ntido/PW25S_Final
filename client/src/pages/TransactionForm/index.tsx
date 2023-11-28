@@ -1,266 +1,154 @@
-import {useEffect, useState} from "react";
-import {Link, useNavigate, useParams} from "react-router-dom";
-import {IAccount, ITransaction} from "@/commons/interfaces";
-import AccountService from "@/service/AccountService.ts";
+import {ChangeEvent, useState, useEffect} from "react";
+import {ButtonWithProgress} from "@/components/ButtonWithProgress";
+import {Input} from "@/components/Input";
+// import {IAccount} from "@/commons/interfaces";
+import {ITransaction} from "@/commons/interfaces";
+// import AccountService from "@/service/AccountService.ts";
+import {useNavigate, useParams} from "react-router-dom";
 import TransactionService from "@/service/TransactionService.ts";
-import {
-    FormErrorMessage,
-    FormLabel,
-    FormControl,
-    Textarea,
-    Select,
-    Button,
-    Flex,
-    Box,
-    Stack,
-    Heading,
-    useColorModeValue,
-} from "@chakra-ui/react";
-import { Input } from "@/components/Input";
-import {useForm} from "react-hook-form";
 
 export function TransactionForm() {
-    const {
-        handleSubmit,
-        register,
-        formState: {errors, isSubmitting},
-        reset,
-    } = useForm<ITransaction>();
-    const [apiError, setApiError] = useState("");
-    const [accounts, setAccounts] = useState<IAccount[]>([]);
-    const navigate = useNavigate();
-    const {id} = useParams();
-    const [entity, setEntity] = useState<ITransaction>({
+    const [form, setForm] = useState<ITransaction>({
         id: undefined,
         description: "",
         realValue: 0,
-        date: "",
-        account: {id: undefined, description: "", savedMoney: 0},
-        category: "",
+        type: "",
         status: "",
-        type: ""
+        date: "",
+        category: "",
+        account: {id: undefined, description: "", savedMoney: 0}
     });
+    const [errors, setErrors] = useState({
+        id: undefined,
+        description: "",
+        realValue: 0,
+        type: "",
+        status: "",
+        date: "",
+        category: "",
+        account: {id: undefined, description: "", savedMoney: 0}
+    });
+    const [pendingApiCall, setPendingApiCall] = useState(false);
+    const [apiError, setApiError] = useState(false);
+    const navigate = useNavigate();
+    const {id} = useParams();
 
-    // Executa ao carregar o componente
     useEffect(() => {
-        loadData();
-    }, []);
-
-    useEffect(() => {
-        reset(entity);
-    }, [entity, reset]);
-
-    const loadData = async () => {
-        // Busca a lista de categorias
-        await AccountService.findAll()
-            .then((response) => {
-                // caso sucesso, adiciona a lista no state
-                setAccounts(response.data);
-                setApiError("");
-            })
-            .catch(() => {
-                setApiError("Falha ao carregar a combo de contas.");
-            });
-
         if (id) {
             TransactionService.findById(parseInt(id))
                 .then((response) => {
                     if (response.data) {
-                        setEntity({
+                        setForm({
                             id: response.data.id,
                             description: response.data.description,
                             realValue: response.data.realValue,
-                            date: response.data.date,
-                            account: {id: response.data.account.id, description: "", savedMoney: 0},
-                            category: response.data.category,
+                            type: response.data.type,
                             status: response.data.status,
-                            type: response.data.type
+                            date: response.data.date,
+                            category: response.data.category,
+                            account: {id: response.data.account.id,
+                                description: response.data.account.description, savedMoney: response.data.account.savedMoney}
                         });
-                        setApiError("");
-                    } else {
-                        setApiError("Falha ao carregar a transação");
                     }
                 })
-                .catch(() => {
-                    setApiError("Falha ao carregar a transação");
-                });
-        } else {
-            setEntity((previousEntity) => {
-                return {
-                    ...previousEntity,
-                    account: {id: accounts[0]?.id, description: "", savedMoney: 0},
-                };
-            });
+                .catch((error) => {
+                    console.log(error);
+                })
         }
+    }, []);
+
+    const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const {value, name} = event.target;
+        setForm((previousForm) => {
+            return {
+                ...previousForm,
+                [name]: value,
+            };
+        });
+        setErrors((previousErrors) => {
+            return {
+                ...previousErrors,
+                [name]: "",
+            };
+        });
     };
 
-    const onSubmit = (data: ITransaction) => {
-        const transaction: ITransaction = {
-            ...data,
-            id: entity.id,
-            description: entity.description,
-            realValue: entity.realValue,
-            date: entity.date,
-            category: entity.category,
-            status: entity.status,
-            type: entity.type,
-            account: {id: data.account.id, description: "", savedMoney: 0}
-        };
+    const onSubmit = () => {
 
+        const transaction: ITransaction = {
+            id: form.id,
+            description: form.description,
+            realValue: form.realValue,
+            type: form.type,
+            status: form.status,
+            date: form.date,
+            category: form.category,
+            account: {id: form.account.id, description: form.account.description, savedMoney: form.account.savedMoney}
+        };
+        setPendingApiCall(true);
         TransactionService.save(transaction)
-            .then(() => {
+            .then((response) => {
+                console.log(response);
+                setPendingApiCall(false);
                 navigate("/transactions");
             })
-            .catch(() => {
-                setApiError("Falha ao salvar a transação.");
+            .catch((responseError) => {
+                if (responseError.response.data.validationErrors) {
+                    setErrors(responseError.response.data.validationErrors);
+                }
+                setPendingApiCall(false);
+                setApiError(true);
             });
     };
 
     return (
         <>
-            <Flex
-                minH={'100vh'}
-                align={'center'}
-                justify={'center'}
-                bg={useColorModeValue('gray.50', 'gray.800')}>
-                <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
-                    <Stack align={'center'}>
-                        <Heading fontSize={'4xl'}>Cadastrar transação</Heading>
-                    </Stack>
-                    <Box
-                        rounded={'lg'}
-                        bg={useColorModeValue('white', 'gray.700')}
-                        boxShadow={'lg'}
-                        p={8}>
-                        <Stack spacing={4}>
-                            <FormControl isInvalid={errors.description && true}>
-                                <FormLabel htmlFor="desc">Descrição</FormLabel>
-                                <Input
-                                    name="desc"
-                                    placeholder="Descrição da transação"
-                                    {...register("description", {
-                                        required: "O campo descrição é obrigatório",
-                                        minLength: {
-                                            value: 2,
-                                            message: "O tamanho deve ser entre 2 e 1024 caracteres",
-                                        },
-                                        maxLength: {
-                                            value: 1024,
-                                            message: "O tamanho deve ser entre 2 e 1024 caracteres",
-                                        },
-                                    })}
+            <main className="container">
+                <form>
+                    <div className="text-center">
+                        <h1 className="h3 mb-3 fw-normal">Cadastro de Transação</h1>
+                    </div>
 
-                                />
-                                <FormErrorMessage>
-                                    {errors.description && errors.description.message}
-                                </FormErrorMessage>
-                            </FormControl>
+                    <div className="form-floating mb-3">
+                        <Input
+                            className="form-control"
+                            name="description"
+                            label="Descrição"
+                            placeholder="Informe a descrição"
+                            type="text"
+                            value={form.description}
+                            onChange={onChange}
+                            hasError={errors.description ? true : false}
+                            error={errors.description}
+                        />
+                    </div>
+                    <div className="form-floating mb-3">
+                        <Input
+                            className="form-control"
+                            name="realValue"
+                            label="Valor"
+                            placeholder="Informe o valor da transação"
+                            type="number"
+                            value={form.realValue.toString()}
+                            onChange={onChange}
+                            hasError={errors.description ? true : false}
+                            error={errors.description}
+                        />
+                    </div>
+                    {apiError && (
+                        <div className="alert alert-danger">
+                            Falha ao cadastrar conta.
+                        </div>
+                    )}
 
-                            <FormControl isInvalid={errors.account && true}>
-                                <FormLabel htmlFor="category">Conta</FormLabel>
-
-                                <Select
-                                    id="account"
-                                    {...register("account.id", {
-                                        required: "O campo conta é obrigatório",
-                                    })}
-                                    size="sm"
-                                >
-                                    {accounts.map((account: IAccount) => (
-                                        <option key={account.id} value={account.id}>
-                                            {account.description}
-                                        </option>
-                                    ))}
-                                </Select>
-
-                                <FormErrorMessage>
-                                    {errors.account && errors.account.message}
-                                </FormErrorMessage>
-                            </FormControl>
-                            <Stack spacing={10}>
-                                <Button
-                                    colorScheme={'teal'}
-                                    isLoading={isSubmitting}
-                                    type="submit">
-                                    Salvar
-                                </Button>
-                                <Button
-                                    colorScheme={'red'}>
-                                    <Link to="/transactions"> Voltar</Link>
-                                </Button>
-                            </Stack>
-                        </Stack>
-                    </Box>
-                </Stack>
-            </Flex>
-            {/*<div className="container">*/}
-            {/*    <div className="text-center">*/}
-            {/*        <h1 className="h3 mb-3 fw-normal">Lista de Transações</h1>*/}
-            {/*    </div>*/}
-            {/*    <form onSubmit={handleSubmit(onSubmit)}>*/}
-            {/*        <FormControl isInvalid={errors.description && true}>*/}
-            {/*            <FormLabel htmlFor="description">Descrição</FormLabel>*/}
-            {/*            <Textarea*/}
-            {/*                id="description"*/}
-            {/*                maxLength={1024}*/}
-            {/*                placeholder="Descrição do produto"*/}
-            {/*                {...register("description", {*/}
-            {/*                    required: "O campo descrição é obrigatório",*/}
-            {/*                    minLength: {*/}
-            {/*                        value: 2,*/}
-            {/*                        message: "O tamanho deve ser entre 2 e 1024 caracteres",*/}
-            {/*                    },*/}
-            {/*                    maxLength: {*/}
-            {/*                        value: 1024,*/}
-            {/*                        message: "O tamanho deve ser entre 2 e 1024 caracteres",*/}
-            {/*                    },*/}
-            {/*                })}*/}
-            {/*                size="sm"*/}
-            {/*            />*/}
-            {/*            <FormErrorMessage>*/}
-            {/*                {errors.description && errors.description.message}*/}
-            {/*            </FormErrorMessage>*/}
-            {/*        </FormControl>*/}
-
-            {/*        <FormControl isInvalid={errors.account && true}>*/}
-            {/*            <FormLabel htmlFor="category">Conta</FormLabel>*/}
-
-            {/*            <Select*/}
-            {/*                id="account"*/}
-            {/*                {...register("account.id", {*/}
-            {/*                    required: "O campo conta é obrigatório",*/}
-            {/*                })}*/}
-            {/*                size="sm"*/}
-            {/*            >*/}
-            {/*                {accounts.map((account: IAccount) => (*/}
-            {/*                    <option key={account.id} value={account.id}>*/}
-            {/*                        {account.description}*/}
-            {/*                    </option>*/}
-            {/*                ))}*/}
-            {/*            </Select>*/}
-
-            {/*            <FormErrorMessage>*/}
-            {/*                {errors.account && errors.account.message}*/}
-            {/*            </FormErrorMessage>*/}
-            {/*        </FormControl>*/}
-
-            {/*        <div className="text-center">*/}
-            {/*            <Button*/}
-            {/*                mt={4}*/}
-            {/*                colorScheme="teal"*/}
-            {/*                isLoading={isSubmitting}*/}
-            {/*                type="submit"*/}
-            {/*            >*/}
-            {/*                Salvar*/}
-            {/*            </Button>*/}
-            {/*        </div>*/}
-            {/*    </form>*/}
-            {/*    {apiError && <div className="alert alert-danger">{apiError}</div>}*/}
-            {/*    <div className="text-center">*/}
-            {/*        <Link to="/transactions">Voltar</Link>*/}
-            {/*    </div>*/}
-            {/*</div>*/}
+                    <ButtonWithProgress
+                        onClick={onSubmit}
+                        disabled={pendingApiCall ? true : false}
+                        pendingApiCall={pendingApiCall}
+                        text="Salvar"
+                    />
+                </form>
+            </main>
         </>
-    )
-        ;
+    );
 }

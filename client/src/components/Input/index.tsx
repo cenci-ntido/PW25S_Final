@@ -29,7 +29,7 @@ export function Input({
   return (
     <>
       <InputChakra
-        id={name}
+        name={name}
         className={inputClassName}
         type={type}
         placeholder={placeholder}
