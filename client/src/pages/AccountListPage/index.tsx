@@ -1,12 +1,12 @@
 import {useEffect, useState} from "react";
 import AccountService from "@/service/AccountService.ts";
-import {IAccount} from "@/commons/interfaces";
-import {Link} from "react-router-dom";
-import {Button} from "@chakra-ui/react";
+import { useNavigate} from "react-router-dom";
+import {ListPage} from "@/components/ListPage";
 
 export function AccountListPage() {
     const [data, setData] = useState([]);
     const [apiError, setApiError] = useState("");
+    const navigate = useNavigate();
 
     useEffect(() => {
         loadData();
@@ -37,57 +37,14 @@ export function AccountListPage() {
     };
 
     return (
-        <>
-            <main className="container">
-                <div className="text-center">
-                    <h1 className="h3 mb-3 fw-normal">Lista de Contas</h1>
-                </div>
-                <div className="text-center">
-
-                    <Button colorScheme={'teal'}>
-                        <Link  to="/accounts/new">
-                            Nova Conta
-                        </Link>
-                    </Button>
-                </div>
-                {apiError && <div className="alert alert-danger">{apiError}</div>}
-                <table className="table table-striped">
-                    <thead>
-                    <tr>
-                        <td>#</td>
-                        <td>Nome</td>
-                        <td>Dinheiro Guardado</td>
-                        <td>Editar</td>
-                        <td>Remover</td>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {data.map((account: IAccount) => (
-                        <tr key={account.id}>
-                            <td>{account.id}</td>
-                            <td>{account.description}</td>
-                            <td>{account.savedMoney}</td>
-                            <td>
-                                <Link
-                                    className="btn btn-primary"
-                                    to={`/accounts/${account.id}`}
-                                >
-                                    Editar
-                                </Link>
-                            </td>
-                            <td>
-                                <button
-                                    className="btn btn-danger"
-                                    onClick={() => onClickRemove(account.id)}
-                                >
-                                    Remover
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
-            </main>
-        </>
+        <ListPage
+            data={data}
+            loadData={loadData}
+            onEdit={(path) => navigate(path)}
+            onRemove={onClickRemove}
+            addButtonLink="/accounts/new"
+            pageTitle="Lista de Contas"
+            pageURL={"/accounts"}
+        />
     );
 }
