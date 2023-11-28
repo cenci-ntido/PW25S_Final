@@ -105,7 +105,10 @@ export function TransactionForm() {
         await TransactionService.getenumtype()
             .then((response) => {
                 // caso sucesso, adiciona a lista no state
+                console.log("Response.data")
+                console.log(response.data)
                 setType(response.data);
+                console.log("Types")
                 console.log(types);
                 setApiError(false);
             })
@@ -113,6 +116,19 @@ export function TransactionForm() {
                 setApiError(true);
             });
 
+        await TransactionService.getenumtype()
+            .then((response) => {
+                // caso sucesso, adiciona a lista no state
+                console.log("Response.data")
+                console.log(response.data)
+                setType(response.data);
+                console.log("Types")
+                console.log(types);
+                setApiError(false);
+            })
+            .catch(() => {
+                setApiError(true);
+            });
 
     };
 
@@ -185,7 +201,6 @@ export function TransactionForm() {
                             {...register("account.id", {
                                 required: "O campo conta é obrigatório",
                             })}
-                            size="sm"
                         >
                             {accounts.map((account: IAccount) => (
                                 <option key={account.id} value={account.id}>
@@ -198,7 +213,7 @@ export function TransactionForm() {
                         <Select
                             id="type"
                         >
-                            {types.map((type: String) => (
+                            {types.map((type) => (
                                 <option key={type.toString()} value={type.toString()}>
                                     {type.toString()}
                                 </option>

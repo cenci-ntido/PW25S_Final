@@ -24,13 +24,19 @@ const remove = (id: number) => {
 const getenumtype = () => {
   return api.get("/transactions/enumtype");
 }
+
+const getenumstatus = () => {
+  return api.get("/transactions/enumstatus");
+}
+
 const TransactionService = {
   save,
   findAll,
   findOne,
   findById,
   remove,
-  getenumtype
+  getenumtype,
+  getenumstatus
 };
 
 export default TransactionService;
