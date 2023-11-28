@@ -1,36 +1,38 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { ICategory, IProduct } from "@/commons/interfaces";
-import AccountService from "@/services/AccountService.ts";
-import TransactionService from "@/services/TransactionService.ts";
+import { IAccount, ITransaction } from "@/commons/interfaces";
+import AccountService from "@/service/AccountService.ts";
+import TransactionService from "@/service/TransactionService.ts";
 import {
   FormErrorMessage,
   FormLabel,
   FormControl,
-  Input,
   Textarea,
   Select,
   Button,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 
-export function ProductFormPageV2() {
+export function TransactionForm() {
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<IProduct>();
+  } = useForm<ITransaction>();
   const [apiError, setApiError] = useState("");
-  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [accounts, setAccounts] = useState<IAccount[]>([]);
   const navigate = useNavigate();
   const { id } = useParams();
-  const [entity, setEntity] = useState<IProduct>({
+  const [entity, setEntity] = useState<ITransaction>({
     id: undefined,
-    name: "",
-    price: 0,
     description: "",
-    category: { id: undefined, name: "" },
+    realValue: 0,
+    date: "",
+    account: { id: undefined, description: "", savedMoney: 0},
+    category: "",
+    status: "",
+    type: ""
   });
 
   // Executa ao carregar o componente
@@ -47,98 +49,74 @@ export function ProductFormPageV2() {
     await AccountService.findAll()
       .then((response) => {
         // caso sucesso, adiciona a lista no state
-        setCategories(response.data);
+        setAccounts(response.data);
         setApiError("");
       })
       .catch(() => {
-        setApiError("Falha ao carregar a combo de categorias.");
+        setApiError("Falha ao carregar a combo de contas.");
       });
 
     if (id) {
-      // ao editar um produto, busca ele no back-end e carrega no objeto form que está no state.
       TransactionService.findById(parseInt(id))
         .then((response) => {
           if (response.data) {
             setEntity({
               id: response.data.id,
-              name: response.data.name,
-              price: response.data.price,
-              description: response.data.description,
-              category: { id: response.data.category.id, name: "" },
+              description:  response.data.description,
+              realValue: response.data.realValue,
+              date: response.data.date,
+              account: { id: response.data.account.id, description: "", savedMoney: 0},
+              category: response.data.category,
+              status: response.data.status,
+              type: response.data.type
             });
             setApiError("");
           } else {
-            setApiError("Falha ao carregar o produto");
+            setApiError("Falha ao carregar a transação");
           }
         })
         .catch(() => {
-          setApiError("Falha ao carregar o produto");
+          setApiError("Falha ao carregar a transação");
         });
     } else {
       setEntity((previousEntity) => {
         return {
           ...previousEntity,
-          category: { id: categories[0]?.id, name: "" },
+          account: { id: accounts[0]?.id, description: "", savedMoney: 0 },
         };
       });
     }
   };
 
-  const onSubmit = (data: IProduct) => {
-    const product: IProduct = {
+  const onSubmit = (data: ITransaction) => {
+    const transaction: ITransaction = {
       ...data,
       id: entity.id,
-      category: { id: data.category.id, name: "" },
+      description:  entity.description,
+      realValue: entity.realValue,
+      date: entity.date,
+      category: entity.category,
+      status: entity.status,
+      type: entity.type,
+      account: { id: data.account.id, description: "", savedMoney: 0 }
     };
 
-    TransactionService.save(product)
+    TransactionService.save(transaction)
       .then(() => {
-        navigate("/products-v2");
+        navigate("/transactions");
       })
       .catch(() => {
-        setApiError("Falha ao salvar o produto.");
+        setApiError("Falha ao salvar a transação.");
       });
   };
 
   return (
     <>
       <div className="container">
-        <h1 className="fs-2 text-center">Cadastro de Produto - V2</h1>
+        <div className="text-center">
+          <h1 className="h3 mb-3 fw-normal">Lista de Transações</h1>
+        </div>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <FormControl isInvalid={errors.name && true}>
-            <FormLabel htmlFor="name">Nome</FormLabel>
-            <Input
-              id="name"
-              placeholder="Nome do produto"
-              {...register("name", {
-                required: "O campo nome é obrigatório",
-              })}
-            />
-            <FormErrorMessage>
-              {errors.name && errors.name.message}
-            </FormErrorMessage>
-          </FormControl>
-
-          <FormControl isInvalid={errors.price && true}>
-            <FormLabel htmlFor="price">Preço</FormLabel>
-            <Input
-              id="price"
-              placeholder="0.0"
-              {...register("price", {
-                required: "O campo preço é obrigatório",
-                min: {
-                  value: 0.01,
-                  message: "O valor deve ser maior que zero",
-                },
-              })}
-              type="number"
-              step="any"
-            />
-
-            <FormErrorMessage>
-              {errors.price && errors.price.message}
-            </FormErrorMessage>
-          </FormControl>
 
           <FormControl isInvalid={errors.description && true}>
             <FormLabel htmlFor="description">Descrição</FormLabel>
@@ -164,25 +142,25 @@ export function ProductFormPageV2() {
             </FormErrorMessage>
           </FormControl>
 
-          <FormControl isInvalid={errors.category && true}>
-            <FormLabel htmlFor="category">Categoria</FormLabel>
+          <FormControl isInvalid={errors.account && true}>
+            <FormLabel htmlFor="category">Conta</FormLabel>
 
             <Select
-              id="category"
-              {...register("category.id", {
-                required: "O campo categoria é obrigatório",
+              id="account"
+              {...register("account.id", {
+                required: "O campo conta é obrigatório",
               })}
               size="sm"
             >
-              {categories.map((category: ICategory) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
+              {accounts.map((account: IAccount) => (
+                <option key={account.id} value={account.id}>
+                  {account.description}
                 </option>
               ))}
             </Select>
 
             <FormErrorMessage>
-              {errors.description && errors.description.message}
+              {errors.account && errors.account.message}
             </FormErrorMessage>
           </FormControl>
 
@@ -199,7 +177,7 @@ export function ProductFormPageV2() {
         </form>
         {apiError && <div className="alert alert-danger">{apiError}</div>}
         <div className="text-center">
-          <Link to="/products-v2">Voltar</Link>
+          <Link to="/transactions">Voltar</Link>
         </div>
       </div>
     </>

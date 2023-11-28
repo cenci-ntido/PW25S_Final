@@ -13,6 +13,10 @@ const findOne = (id: number) => {
   return api.get(`/transactions/${id}`);
 };
 
+const findById = (id: number) => {
+  return api.get(`/transactions/${id}`);
+};
+
 const remove = (id: number) => {
   return api.delete(`/transactions/${id}`);
 };
@@ -21,6 +25,7 @@ const TransactionService = {
   save,
   findAll,
   findOne,
+  findById,
   remove,
 };
 

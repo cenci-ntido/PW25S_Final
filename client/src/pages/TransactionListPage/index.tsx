@@ -3,25 +3,24 @@ import { Link, useNavigate } from "react-router-dom";
 import { ITransaction } from "@/commons/interfaces";
 import TransactionService from "@/service/TransactionService.ts";
 import {
-  BsPlusCircle,
   BsThreeDotsVertical,
   BsPencilSquare,
   BsTrash,
 } from "react-icons/bs";
 import {
-  TableContainer,
-  Table,
-  TableCaption,
-  Thead,
-  Tr,
-  Th,
-  Tbody,
-  Td,
-  Menu,
-  MenuButton,
-  IconButton,
-  MenuList,
-  MenuItem,
+    TableContainer,
+    Table,
+    TableCaption,
+    Thead,
+    Tr,
+    Th,
+    Tbody,
+    Td,
+    Menu,
+    MenuButton,
+    IconButton,
+    MenuList,
+    MenuItem, Button,
 } from "@chakra-ui/react";
 
 export function TransactionListPage() {
@@ -67,16 +66,16 @@ export function TransactionListPage() {
   return (
     <>
       <div className="container">
-        <h1 className="fs-2 mb-4 text-center">Lista de Transações</h1>
         <div className="text-center">
-          <Link
-            className="btn btn-success btn-icon mb-3"
-            to="/transactions/new"
-            title="Novo Transação"
-            style={{ display: "inline-block" }}
-          >
-            <BsPlusCircle style={{ display: "inline-block" }} /> Nova Transação
-          </Link>
+          <h1 className="h3 mb-3 fw-normal">Lista de Transações</h1>
+        </div>
+        <div className="text-center">
+
+            <Button colorScheme={'teal'}>
+                <Link  to="/transactions/new">
+                    Nova Transação
+                </Link>
+            </Button>
         </div>
         <TableContainer>
           <Table>

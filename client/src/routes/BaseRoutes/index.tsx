@@ -5,10 +5,8 @@ import { Route, Routes } from "react-router-dom";
 import { AuthenticatedRoutes } from "../AuthenticatedRoutes";
 import { AccountListPage } from "@/pages/AccountListPage";
 import { AccountFormPage } from "@/pages/AccountForm";
-// import { ProductListPage } from "@/pages/ProductListPage";
-// import { ProductFormPage } from "@/pages/ProductFormPage";
 import { TransactionListPage } from "@/pages/TransactionListPage";
-// import { TransactionFormPage } from "@/pages/ProductFormPageV2";
+import { TransactionForm } from "@/pages/TransactionForm";
 
 export function BaseRoutes() {
   return (
@@ -27,13 +25,9 @@ export function BaseRoutes() {
                     <Route path="/accounts/:id" element={<AccountFormPage />} />
 
                 <Route path="/transactions" element={<TransactionListPage />} />
-                <Route path="/transactions/new" element={<TransactionListPage />} />
+                <Route path="/transactions/new" element={<TransactionForm />} />
                 <Route path="/transactions/:id" element={<TransactionListPage />} />
 
-                <Route path="/transactions-v2" element={<TransactionListPage />} />
-
-                {/*<Route path="/transactions-v2/new" element={<ProductFormPageV2 />} />*/}
-                {/*<Route path="/transactions-v2/:id" element={<ProductFormPageV2 />} />*/}
             </Route>
         </Routes>
     </>

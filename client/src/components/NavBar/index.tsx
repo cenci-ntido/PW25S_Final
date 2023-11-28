@@ -1,4 +1,5 @@
-import {NavLink} from "react-router-dom";
+import { useEffect, useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 import AuthService from "@/service/AuthService";
 import {
     Tabs,
@@ -10,7 +11,7 @@ import {
     ChakraProvider,
     extendTheme,
 } from "@chakra-ui/react";
-import {ArrowForwardIcon} from "@chakra-ui/icons";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
 
 const theme = extendTheme({
     config: {
@@ -19,9 +20,21 @@ const theme = extendTheme({
 });
 
 export function NavBar() {
+    const location = useLocation();
+
+    const [url, setUrl] = useState("");
+
     const onClickLogout = () => {
         AuthService.logout();
         window.location.reload();
+    };
+
+    useEffect(() => {
+        setUrl(location.pathname);
+    }, [location.pathname]);
+
+    const onClick = () => {
+        setUrl(location.pathname);
     };
 
     return (
@@ -30,33 +43,49 @@ export function NavBar() {
                 <Flex justifyContent="space-between">
                     <Tabs variant="soft-rounded" colorScheme={"black"}>
                         <TabList>
-                            <Tab>
+                            <Tab
+                                onClick={onClick}
+                                aria-selected={url === "/"}
+                            >
                                 <NavLink
                                     to="/"
-                                    style={{color: "white"}} // Defina a cor do texto para branco
+                                    style={{ color: "white" }}
                                 >
                                     Home
                                 </NavLink>
                             </Tab>
-                            <Tab>
+                            <Tab
+                                onClick={onClick}
+                                aria-selected={url === "/accounts"}
+                            >
                                 <NavLink
                                     to="/accounts"
-                                    style={{color: "white"}} // Defina a cor do texto para branco
+                                    style={{ color: "white" }}
                                 >
                                     Contas
                                 </NavLink>
                             </Tab>
-                            <Tab>
+                            <Tab
+                                onClick={onClick}
+                                aria-selected={url === "/transactions"}
+                            >
                                 <NavLink
                                     to="/transactions"
-                                    style={{color: "white"}} // Defina a cor do texto para branco
+                                    style={{ color: "white" }}
                                 >
                                     Transações
                                 </NavLink>
                             </Tab>
                         </TabList>
                     </Tabs>
-                    <Button onClick={onClickLogout} variant={"outline"} colorScheme={"red"} rightIcon={<ArrowForwardIcon />}>Sair</Button>
+                    <Button
+                        onClick={onClickLogout}
+                        variant={"outline"}
+                        colorScheme={"red"}
+                        rightIcon={<ArrowForwardIcon />}
+                    >
+                        Sair
+                    </Button>
                 </Flex>
             </Box>
         </ChakraProvider>

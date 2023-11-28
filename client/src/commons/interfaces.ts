@@ -19,7 +19,7 @@ export interface ITransaction {
     id?: number;
     description: string;
     realValue: number;
-    date: Date;
+    date: string;
     account: IAccount;
     category: string;
     status: string;
