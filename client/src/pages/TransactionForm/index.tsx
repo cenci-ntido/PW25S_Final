@@ -4,12 +4,14 @@ import {Input} from "@/components/Input";
 import {IAccount, ITransaction} from "@/commons/interfaces";
 import {useNavigate, useParams} from "react-router-dom";
 import TransactionService from "@/service/TransactionService.ts";
-import {Select} from "@chakra-ui/react";
+import {Select} from "@/components/Select";
 import {useForm} from "react-hook-form";
 import AccountService from "@/service/AccountService.ts";
 
 export function TransactionForm() {
-    const [types, setType] = useState();
+    const [options, setOptions] = useState<{ element: string }[]>([]);
+    const [types, setType] = useState<string[]>([]);
+    const [statuslist, setStatus] = useState<string[]>([]);
     const [accounts, setAccounts] = useState<IAccount[]>([]);
     const [form, setForm] = useState<ITransaction>({
         id: undefined,
@@ -73,7 +75,8 @@ export function TransactionForm() {
         //         };
         //     });
         // }
-    }, []);
+        setOptions(statuslist.map((element) => ({ element })));
+    }, [statuslist]);
 
     const onChange = (event: ChangeEvent<HTMLInputElement>) => {
         const {value, name} = event.target;
@@ -116,14 +119,10 @@ export function TransactionForm() {
                 setApiError(true);
             });
 
-        await TransactionService.getenumtype()
+        await TransactionService.getenumstatus()
             .then((response) => {
                 // caso sucesso, adiciona a lista no state
-                console.log("Response.data")
-                console.log(response.data)
-                setType(response.data);
-                console.log("Types")
-                console.log(types);
+                setStatus(response.data);
                 setApiError(false);
             })
             .catch(() => {
@@ -196,29 +195,32 @@ export function TransactionForm() {
                         />
                     </div>
                     <div className="form-floating mb-3">
-                        <Select
-                            id="account"
-                            {...register("account.id", {
-                                required: "O campo conta é obrigatório",
-                            })}
-                        >
-                            {accounts.map((account: IAccount) => (
-                                <option key={account.id} value={account.id}>
-                                    {account.description}
-                                </option>
-                            ))}
-                        </Select>
+                        {/*<Select*/}
+                        {/*    id="account"*/}
+                        {/*    {...register("account.id", {*/}
+                        {/*        required: "O campo conta é obrigatório",*/}
+                        {/*    })}*/}
+                        {/*>*/}
+                        {/*    {accounts.map((account: IAccount) => (*/}
+                        {/*        <option key={account.id} value={account.id}>*/}
+                        {/*            {account.description}*/}
+                        {/*        </option>*/}
+                        {/*    ))}*/}
+                        {/*</Select>*/}
                     </div>
                     <div className="form-floating mb-3">
-                        <Select
-                            id="type"
-                        >
-                            {types.map((type) => (
-                                <option key={type.toString()} value={type.toString()}>
-                                    {type.toString()}
-                                </option>
-                            ))}
-                        </Select>
+                        <Select id={'status'} list = {options} label={"Tipo"}></Select>
+                    </div>
+                    <div className="form-floating mb-3">
+                        {/*<Select*/}
+                        {/*    id="type"*/}
+                        {/*>*/}
+                        {/*    {statuslist.map((status) => (*/}
+                        {/*        <option key={status.toString()} value={status.toString()}>*/}
+                        {/*            {status.toString()}*/}
+                        {/*        </option>*/}
+                        {/*    ))}*/}
+                        {/*</Select>*/}
                     </div>
 
                     {apiError && (
