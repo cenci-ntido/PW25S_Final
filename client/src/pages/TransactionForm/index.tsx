@@ -5,7 +5,6 @@ import {IAccount, ITransaction} from "@/commons/interfaces";
 import {useNavigate, useParams} from "react-router-dom";
 import TransactionService from "@/service/TransactionService.ts";
 import {Select} from "@/components/Select";
-import {useForm} from "react-hook-form";
 import AccountService from "@/service/AccountService.ts";
 import {FormControl, FormLabel, Select as SelectChakra} from "@chakra-ui/react";
 
@@ -27,9 +26,6 @@ export function TransactionForm() {
         category: "",
         account: {id: undefined, description: "", savedMoney: 0}
     });
-    const {
-        register,
-    } = useForm<ITransaction>();
     const [errors, setErrors] = useState({
         id: undefined,
         description: "",
@@ -45,6 +41,22 @@ export function TransactionForm() {
     const navigate = useNavigate();
     const {id} = useParams();
 
+    const onChangeSelect = (event: ChangeEvent<HTMLSelectElement>) => {
+        const { value, name } = event.target;
+        setForm((previousForm) => {
+            return {
+                ...previousForm,
+                [name]: { id: value },
+            };
+        });
+        setErrors((previousErrors) => {
+            return {
+                ...previousErrors,
+                [name]: undefined,
+            };
+        });
+    };
+
     useEffect(() => {
         loadData()
         if (id) {
@@ -59,11 +71,12 @@ export function TransactionForm() {
                             status: response.data.status,
                             date: response.data.date,
                             category: response.data.category,
-                            account: {
-                                id: response.data.account.id,
-                                description: response.data.account.description,
-                                savedMoney: response.data.account.savedMoney
-                            }
+                            account: response.data.account
+                            //     {
+                            //     id: response.data.account.id,
+                            //     description: "",
+                            //     savedMoney: 0
+                            // }
                         });
                     }
                 })
@@ -114,11 +127,11 @@ export function TransactionForm() {
         await TransactionService.getenumtype()
             .then((response) => {
                 // caso sucesso, adiciona a lista no state
-                console.log("Response.data")
-                console.log(response.data)
+                // console.log("Response.data")
+                // console.log(response.data)
                 setType(response.data);
-                console.log("Types")
-                console.log(types);
+                // console.log("Types")
+                // console.log(types);
                 setApiError(false);
             })
             .catch(() => {
@@ -157,7 +170,8 @@ export function TransactionForm() {
             status: form.status,
             date: form.date,
             category: form.category.toString(),
-            account: {id: form.account.id, description: form.account.description, savedMoney: form.account.savedMoney}
+            account: form.account
+                // {id: form.account.id, description: form.account.description, savedMoney: form.account.savedMoney}
         };
         setPendingApiCall(true);
         TransactionService.save(transaction)
@@ -228,9 +242,8 @@ export function TransactionForm() {
                         </FormControl>
                         <SelectChakra
                             id="account"
-                            {...register("account.id", {
-                                required: "O campo conta é obrigatório",
-                            })}
+                            value={form.account.id}
+                            onChange={onChangeSelect}
                         >
                             {accounts.map((account: IAccount) => (
                                 <option key={account.id} value={account.id}>
@@ -254,13 +267,14 @@ export function TransactionForm() {
                             Falha ao cadastrar conta.
                         </div>
                     )}
-
+                    ACC: {JSON.stringify(form.account)}
                     <ButtonWithProgress
                         onClick={onSubmit}
                         disabled={pendingApiCall ? true : false}
                         pendingApiCall={pendingApiCall}
                         text="Salvar"
                     />
+
                 </form>
             </main>
         </>
