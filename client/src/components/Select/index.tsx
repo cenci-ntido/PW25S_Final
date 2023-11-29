@@ -4,7 +4,7 @@ interface SelectProps {
     id: string;
     label: string;
     list: { element: string }[];
-    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
     value: string;
 }
 
