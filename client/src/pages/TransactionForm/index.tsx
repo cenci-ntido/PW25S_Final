@@ -42,17 +42,17 @@ export function TransactionForm() {
     const {id} = useParams();
 
     const onChangeSelect = (event: ChangeEvent<HTMLSelectElement>) => {
-        const { value, name } = event.target;
+        const { value, id } = event.target;
         setForm((previousForm) => {
             return {
                 ...previousForm,
-                [name]: { id: value },
+                [id]: { id: value },
             };
         });
         setErrors((previousErrors) => {
             return {
                 ...previousErrors,
-                [name]: undefined,
+                [id]: undefined,
             };
         });
     };
@@ -253,13 +253,13 @@ export function TransactionForm() {
                         </SelectChakra>
                     </div>
                     <div className="form-floating mb-3">
-                        <Select id={'status'} list = {options} label={"Status"}></Select>
+                        <Select id={'status'} list = {options} label={"Status"} onChange={onChangeSelect} value={form.status}></Select>
                     </div>
                     <div className="form-floating mb-3">
-                        <Select id={'type'} list = {optionsType} label={"Tipo"}></Select>
+                        <Select id={'type'} list = {optionsType} label={"Tipo"} onChange={onChangeSelect} value={form.type} ></Select>
                     </div>
                     <div className="form-floating mb-3">
-                        <Select id={'categories'} list = {optionsCategories} label={"Categoria"}></Select>
+                        <Select id={'category'} list = {optionsCategories} label={"Categoria"}  onChange={onChangeSelect} value={form.category} ></Select>
                     </div>
 
                     {apiError && (
