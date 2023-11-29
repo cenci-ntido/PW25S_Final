@@ -41,8 +41,8 @@ public class TransactionController extends CrudController<Transaction, Transacti
     @RequestMapping("enumtype")
     protected List<String> getTypeEnum (){
         List<String> types = new ArrayList<>();
-        types.add(EnumTypeTransaction.EXPENSE.toString());
-        types.add(EnumTypeTransaction.REVENUE.toString());
+        types.add(EnumTypeTransaction.DESPESA.toString());
+        types.add(EnumTypeTransaction.RECEITA.toString());
         return types;
     }
 
