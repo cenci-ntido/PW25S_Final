@@ -29,6 +29,11 @@ const getenumstatus = () => {
   return api.get("/transactions/enumstatus");
 }
 
+const getenumcategories = () => {
+  return api.get("/transactions/enumcategory");
+}
+
+
 const TransactionService = {
   save,
   findAll,
@@ -36,7 +41,8 @@ const TransactionService = {
   findById,
   remove,
   getenumtype,
-  getenumstatus
+  getenumstatus,
+  getenumcategories
 };
 
 export default TransactionService;

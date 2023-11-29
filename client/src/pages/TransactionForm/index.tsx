@@ -12,8 +12,10 @@ import {FormControl, FormLabel, Select as SelectChakra} from "@chakra-ui/react";
 export function TransactionForm() {
     const [options, setOptions] = useState<{ element: string }[]>([]);
     const [optionsType, setOptionsType] = useState<{ element: string }[]>([]);
+    const [optionsCategories, setoptionsCategories] = useState<{ element: string }[]>([]);
     const [types, setType] = useState<string[]>([]);
     const [statuslist, setStatus] = useState<string[]>([]);
+    const [categoriesList, setCategoriesList] = useState<string[]>([]);
     const [accounts, setAccounts] = useState<IAccount[]>([]);
     const [form, setForm] = useState<ITransaction>({
         id: undefined,
@@ -79,7 +81,8 @@ export function TransactionForm() {
         // }
         setOptions(statuslist.map((element) => ({ element })));
         setOptionsType(types.map((element) => ({ element })));
-    }, [statuslist, types]);
+        setoptionsCategories(categoriesList.map((element) => ({ element })));
+    }, [statuslist, types, categoriesList]);
 
     const onChange = (event: ChangeEvent<HTMLInputElement>) => {
         const {value, name} = event.target;
@@ -132,6 +135,15 @@ export function TransactionForm() {
                 setApiError(true);
             });
 
+        await TransactionService.getenumcategories()
+            .then((response) => {
+                // caso sucesso, adiciona a lista no state
+                setCategoriesList(response.data);
+                setApiError(false);
+            })
+            .catch(() => {
+                setApiError(true);
+            });
     };
 
 
@@ -198,6 +210,19 @@ export function TransactionForm() {
                         />
                     </div>
                     <div className="form-floating mb-3">
+                        <Input
+                            className="form-control"
+                            name="date"
+                            label="Data"
+                            placeholder="Informe a data da transação"
+                            type="date"
+                            value={form.date.toString()}
+                            onChange={onChange}
+                            hasError={errors.description ? true : false}
+                            error={errors.description}
+                        />
+                    </div>
+                    <div className="form-floating mb-3">
                         <FormControl>
                             <FormLabel htmlFor='account'>Conta</FormLabel>
                         </FormControl>
@@ -219,6 +244,9 @@ export function TransactionForm() {
                     </div>
                     <div className="form-floating mb-3">
                         <Select id={'type'} list = {optionsType} label={"Tipo"}></Select>
+                    </div>
+                    <div className="form-floating mb-3">
+                        <Select id={'categories'} list = {optionsCategories} label={"Categoria"}></Select>
                     </div>
 
                     {apiError && (

@@ -2,6 +2,7 @@ package br.edu.utfpr.pb.pw25s.server.controller;
 
 import br.edu.utfpr.pb.pw25s.server.dto.TransactionDTO;
 import br.edu.utfpr.pb.pw25s.server.model.Transaction;
+import br.edu.utfpr.pb.pw25s.server.model.enums.EnumCategories;
 import br.edu.utfpr.pb.pw25s.server.model.enums.EnumStatus;
 import br.edu.utfpr.pb.pw25s.server.model.enums.EnumTypeTransaction;
 import br.edu.utfpr.pb.pw25s.server.service.ICrudService;
@@ -52,6 +53,15 @@ public class TransactionController extends CrudController<Transaction, Transacti
         status.add(EnumStatus.EM_ABERTO.toString());
         status.add(EnumStatus.PENDENTE.toString());
         return status;
+    }
+
+    @RequestMapping("enumcategory")
+    protected List<String> getCategory (){
+        List<String> category = new ArrayList<>();
+        category.add(EnumCategories.FIXO.toString());
+        category.add(EnumCategories.PESSOAL.toString());
+        category.add(EnumCategories.VARIAVEL.toString());
+        return category;
     }
 }
 
