@@ -20,7 +20,7 @@ export function TransactionForm() {
         id: undefined,
         description: "",
         realValue: 0,
-        type: "",
+        typeTransaction: "",
         status: "",
         date: "",
         category: "",
@@ -30,7 +30,7 @@ export function TransactionForm() {
         id: undefined,
         description: "",
         realValue: 0,
-        type: "",
+        typeTransaction: "",
         status: "",
         date: "",
         category: "",
@@ -42,17 +42,29 @@ export function TransactionForm() {
     const {id} = useParams();
 
     const onChangeSelect = (event: ChangeEvent<HTMLSelectElement>) => {
-        const { value, id } = event.target;
-        setForm((previousForm) => {
-            return {
-                ...previousForm,
-                [id]: { id: value },
-            };
-        });
+        const { value, name } = event.target;
+
+        if ("account" !== name) {
+            setForm((previousForm) => {
+                return {
+                    ...previousForm,
+                    [name]: value,
+                };
+            });
+        } else {
+            setForm((previousForm) => {
+                return {
+                    ...previousForm,
+                    [name]: { id: value },
+                };
+            });
+        }
+
+
         setErrors((previousErrors) => {
             return {
                 ...previousErrors,
-                [id]: undefined,
+                [name]: undefined,
             };
         });
     };
@@ -67,7 +79,7 @@ export function TransactionForm() {
                             id: response.data.id,
                             description: response.data.description,
                             realValue: response.data.realValue,
-                            type: response.data.type,
+                            typeTransaction: response.data.typeTransaction,
                             status: response.data.status,
                             date: response.data.date,
                             category: response.data.category,
@@ -166,7 +178,7 @@ export function TransactionForm() {
             id: form.id,
             description: form.description,
             realValue: form.realValue,
-            type: form.type,
+            typeTransaction: form.typeTransaction,
             status: form.status,
             date: form.date,
             category: form.category.toString(),
@@ -244,6 +256,7 @@ export function TransactionForm() {
                             id="account"
                             value={form.account.id}
                             onChange={onChangeSelect}
+                            name="account"
                         >
                             {accounts.map((account: IAccount) => (
                                 <option key={account.id} value={account.id}>
@@ -253,13 +266,13 @@ export function TransactionForm() {
                         </SelectChakra>
                     </div>
                     <div className="form-floating mb-3">
-                        <Select id={'status'} list = {options} label={"Status"} onChange={onChangeSelect} value={form.status}></Select>
+                        <Select id={'status'} list = {options} label={"Status"} name={"status"} onChange={onChangeSelect} value={form.status}></Select>
                     </div>
                     <div className="form-floating mb-3">
-                        <Select id={'type'} list = {optionsType} label={"Tipo"} onChange={onChangeSelect} value={form.type} ></Select>
+                        <Select id={'typeTransaction'} list = {optionsType} label={"Tipo"} name={"typeTransaction"}  onChange={onChangeSelect} value={form.typeTransaction} ></Select>
                     </div>
                     <div className="form-floating mb-3">
-                        <Select id={'category'} list = {optionsCategories} label={"Categoria"}  onChange={onChangeSelect} value={form.category} ></Select>
+                        <Select id={'category'} list = {optionsCategories} label={"Categoria"}  name={"category"} onChange={onChangeSelect} value={form.category} ></Select>
                     </div>
 
                     {apiError && (
@@ -268,6 +281,7 @@ export function TransactionForm() {
                         </div>
                     )}
                     ACC: {JSON.stringify(form.account)}
+                    ACC: {JSON.stringify(form.typeTransaction)}
                     <ButtonWithProgress
                         onClick={onSubmit}
                         disabled={pendingApiCall ? true : false}

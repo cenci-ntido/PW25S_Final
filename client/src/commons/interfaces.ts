@@ -23,5 +23,5 @@ export interface ITransaction {
     account: IAccount;
     category: string;
     status: string;
-    type: string;
+    typeTransaction: string;
 }

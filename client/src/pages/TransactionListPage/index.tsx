@@ -75,7 +75,7 @@ export function TransactionListPage() {
                             <td>{transaction.date}</td>
                             <td>{transaction.account.description}</td>
                             <td>{transaction.status}</td>
-                            <td>{transaction.type}</td>
+                            <td>{transaction.typeTransaction}</td>
                             <td>{transaction.category}</td>
                             <td>
                                 <Link
