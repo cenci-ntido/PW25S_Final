@@ -156,7 +156,7 @@ export function TransactionForm() {
             type: form.type,
             status: form.status,
             date: form.date,
-            category: form.category,
+            category: form.category.toString(),
             account: {id: form.account.id, description: form.account.description, savedMoney: form.account.savedMoney}
         };
         setPendingApiCall(true);
