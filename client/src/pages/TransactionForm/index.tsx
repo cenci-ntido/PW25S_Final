@@ -7,9 +7,11 @@ import TransactionService from "@/service/TransactionService.ts";
 import {Select} from "@/components/Select";
 import {useForm} from "react-hook-form";
 import AccountService from "@/service/AccountService.ts";
+import {FormControl, FormLabel, Select as SelectChakra} from "@chakra-ui/react";
 
 export function TransactionForm() {
     const [options, setOptions] = useState<{ element: string }[]>([]);
+    const [optionsType, setOptionsType] = useState<{ element: string }[]>([]);
     const [types, setType] = useState<string[]>([]);
     const [statuslist, setStatus] = useState<string[]>([]);
     const [accounts, setAccounts] = useState<IAccount[]>([]);
@@ -76,7 +78,8 @@ export function TransactionForm() {
         //     });
         // }
         setOptions(statuslist.map((element) => ({ element })));
-    }, [statuslist]);
+        setOptionsType(types.map((element) => ({ element })));
+    }, [statuslist, types]);
 
     const onChange = (event: ChangeEvent<HTMLInputElement>) => {
         const {value, name} = event.target;
@@ -195,32 +198,27 @@ export function TransactionForm() {
                         />
                     </div>
                     <div className="form-floating mb-3">
-                        {/*<Select*/}
-                        {/*    id="account"*/}
-                        {/*    {...register("account.id", {*/}
-                        {/*        required: "O campo conta é obrigatório",*/}
-                        {/*    })}*/}
-                        {/*>*/}
-                        {/*    {accounts.map((account: IAccount) => (*/}
-                        {/*        <option key={account.id} value={account.id}>*/}
-                        {/*            {account.description}*/}
-                        {/*        </option>*/}
-                        {/*    ))}*/}
-                        {/*</Select>*/}
+                        <FormControl>
+                            <FormLabel htmlFor='account'>Conta</FormLabel>
+                        </FormControl>
+                        <SelectChakra
+                            id="account"
+                            {...register("account.id", {
+                                required: "O campo conta é obrigatório",
+                            })}
+                        >
+                            {accounts.map((account: IAccount) => (
+                                <option key={account.id} value={account.id}>
+                                    {account.description}
+                                </option>
+                            ))}
+                        </SelectChakra>
                     </div>
                     <div className="form-floating mb-3">
-                        <Select id={'status'} list = {options} label={"Tipo"}></Select>
+                        <Select id={'status'} list = {options} label={"Status"}></Select>
                     </div>
                     <div className="form-floating mb-3">
-                        {/*<Select*/}
-                        {/*    id="type"*/}
-                        {/*>*/}
-                        {/*    {statuslist.map((status) => (*/}
-                        {/*        <option key={status.toString()} value={status.toString()}>*/}
-                        {/*            {status.toString()}*/}
-                        {/*        </option>*/}
-                        {/*    ))}*/}
-                        {/*</Select>*/}
+                        <Select id={'type'} list = {optionsType} label={"Tipo"}></Select>
                     </div>
 
                     {apiError && (
