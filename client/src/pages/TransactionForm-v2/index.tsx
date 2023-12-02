@@ -3,7 +3,7 @@ import {Link, useNavigate, useParams} from "react-router-dom";
 import {IAccount, ITransaction} from "@/commons/interfaces";
 import AccountService from "@/service/AccountService.ts";
 import TransactionService from "@/service/TransactionService.ts";
-import { Button, FormControl, FormErrorMessage, FormLabel, Input} from "@chakra-ui/react";
+import {Button, FormControl, FormErrorMessage, FormLabel, Input, Select} from "@chakra-ui/react";
 // import {Select} from "@/components/Select";
 import {useForm} from "react-hook-form";
 
@@ -33,19 +33,11 @@ export function TransactionFormV2() {
     const [types, setType] = useState<string[]>([]);
     const [statuslist, setStatus] = useState<string[]>([]);
     const [categoriesList, setCategoriesList] = useState<string[]>([]);
-    // const [options, setOptions] = useState<{
-    //     element: string
-    // }[]>([]);
-    // const [optionsType, setOptionsType] = useState<{
-    //     element: string
-    // }[]>([]);
-    // const [optionsCategories, setoptionsCategories] = useState<{
-    //     element: string
-    // }[]>([]);
+
 
     // Executa ao carregar o componente
     useEffect(() => {
-        loadData();
+        loadData()
     }, [statuslist, types, categoriesList]);
 
     useEffect(() => {
@@ -58,6 +50,35 @@ export function TransactionFormV2() {
             .then((response) => {
                 // caso sucesso, adiciona a lista no state
                 setAccounts(response.data);
+                setApiError("false");
+            })
+            .catch(() => {
+                setApiError("true");
+            });
+        await TransactionService.getenumtype()
+            .then((response) => {
+                // caso sucesso, adiciona a lista no state
+                setType(response.data);
+                setApiError("false");
+            })
+            .catch(() => {
+                setApiError("true");
+            });
+
+        await TransactionService.getenumstatus()
+            .then((response) => {
+                // caso sucesso, adiciona a lista no state
+                setStatus(response.data);
+                setApiError("false");
+            })
+            .catch(() => {
+                setApiError("true");
+            });
+
+        await TransactionService.getenumcategories()
+            .then((response) => {
+                // caso sucesso, adiciona a lista no state
+                setCategoriesList(response.data);
                 setApiError("false");
             })
             .catch(() => {
@@ -80,11 +101,8 @@ export function TransactionFormV2() {
                             account: {id: response.data.account.id, description: "", savedMoney: 0},
                         });
                         setApiError("");
-                        fetchEnums(); // Chama a função para carregar os enums
-                    //     setOptions(statuslist.map((element) => ({element})));
-                    //     setOptionsType(types.map((element) => ({element})));
-                    //     setoptionsCategories(categoriesList.map((element) => ({element})));
-                    // } else {
+
+                    } else {
                         setApiError("Falha ao carregar a transação");
                     }
                 })
@@ -101,23 +119,8 @@ export function TransactionFormV2() {
             });
         }
     };
-    const fetchEnums = async () => {
-        try {
-            const [typeResponse, statusResponse, categoriesResponse] = await Promise.all([
-                TransactionService.getenumtype(),
-                TransactionService.getenumstatus(),
-                TransactionService.getenumcategories()
-            ]);
 
-            setType(typeResponse.data);
-            setStatus(statusResponse.data);
-            setCategoriesList(categoriesResponse.data);
 
-            setApiError("");
-        } catch (error) {
-            setApiError("");
-        }
-    };
     const onSubmit = (data: ITransaction) => {
         const transaction: ITransaction = {
             ...data,
@@ -148,7 +151,7 @@ export function TransactionFormV2() {
                 <h1 className="fs-2 text-center">Cadastro de Transações - V2</h1>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <FormControl isInvalid={errors.description && true}>
-                        <FormLabel htmlFor="name">Description</FormLabel>
+                        <FormLabel htmlFor="name">Descrição</FormLabel>
                         <Input
                             id="description"
                             placeholder="Descrição da transação"
@@ -161,72 +164,118 @@ export function TransactionFormV2() {
                         </FormErrorMessage>
                     </FormControl>
 
-                    {/*<FormControl isInvalid={errors.price && true}>*/}
-                    {/*    <FormLabel htmlFor="price">Preço</FormLabel>*/}
-                    {/*    <Input*/}
-                    {/*        id="price"*/}
-                    {/*        placeholder="0.0"*/}
-                    {/*        {...register("price", {*/}
-                    {/*            required: "O campo preço é obrigatório",*/}
-                    {/*            min: {*/}
-                    {/*                value: 0.01,*/}
-                    {/*                message: "O valor deve ser maior que zero",*/}
-                    {/*            },*/}
-                    {/*        })}*/}
-                    {/*        type="number"*/}
-                    {/*        step="any"*/}
-                    {/*    />*/}
+                    <FormControl isInvalid={errors.realValue && true}>
+                        <FormLabel htmlFor="realValue">Valor</FormLabel>
+                        <Input
+                            id="realValue"
+                            placeholder="0.0"
+                            {...register("realValue", {
+                                required: "O campo valor é obrigatório",
+                                min: {
+                                    value: 0.01,
+                                    message: "O valor deve ser maior que zero",
+                                },
+                            })}
+                            type="number"
+                            step="any"
+                        />
 
-                    {/*    <FormErrorMessage>*/}
-                    {/*        {errors.price && errors.price.message}*/}
-                    {/*    </FormErrorMessage>*/}
-                    {/*</FormControl>*/}
+                        <FormErrorMessage>
+                            {errors.realValue && errors.realValue.message}
+                        </FormErrorMessage>
+                    </FormControl>
 
-                    {/*<FormControl isInvalid={errors.description && true}>*/}
-                    {/*    <FormLabel htmlFor="description">Descrição</FormLabel>*/}
-                    {/*    <Textarea*/}
-                    {/*        id="description"*/}
-                    {/*        maxLength={1024}*/}
-                    {/*        placeholder="Descrição do produto"*/}
-                    {/*        {...register("description", {*/}
-                    {/*            required: "O campo descrição é obrigatório",*/}
-                    {/*            minLength: {*/}
-                    {/*                value: 2,*/}
-                    {/*                message: "O tamanho deve ser entre 2 e 1024 caracteres",*/}
-                    {/*            },*/}
-                    {/*            maxLength: {*/}
-                    {/*                value: 1024,*/}
-                    {/*                message: "O tamanho deve ser entre 2 e 1024 caracteres",*/}
-                    {/*            },*/}
-                    {/*        })}*/}
-                    {/*        size="sm"*/}
-                    {/*    />*/}
-                    {/*    <FormErrorMessage>*/}
-                    {/*        {errors.description && errors.description.message}*/}
-                    {/*    </FormErrorMessage>*/}
-                    {/*</FormControl>*/}
+                    <FormControl isInvalid={errors.account && true}>
+                        <FormLabel htmlFor="account">Conta</FormLabel>
 
-                    {/*<FormControl isInvalid={errors.account && true}>*/}
-                    {/*    <FormLabel htmlFor="account">Categoria</FormLabel>*/}
+                        <Select
+                            id="account"
+                            {...register("account.id", {
+                                required: "O campo conta é obrigatório",
+                            })}
+                            size="sm"
+                        >
+                            {accounts.map((account: IAccount) => (
+                                <option key={account.id} value={account.id}>
+                                    {account.description}
+                                </option>
+                            ))}
+                        </Select>
 
-                    {/*    <Select*/}
-                    {/*        id="account"*/}
-                    {/*        {...register("account.id", {*/}
-                    {/*            required: "O campo categoria é obrigatório",*/}
-                    {/*        })}*/}
-                    {/*        size="sm"*/}
-                    {/*    >*/}
-                    {/*        {accounts.map((account: IAccount) => (*/}
-                    {/*            <option key={account.id} value={account.id}>*/}
-                    {/*                {account.name}*/}
-                    {/*            </option>*/}
-                    {/*        ))}*/}
-                    {/*    </Select>*/}
+                        <FormErrorMessage>
+                            {errors.account && errors.account.message}
+                        </FormErrorMessage>
+                    </FormControl>
 
-                    {/*    <FormErrorMessage>*/}
-                    {/*        {errors.description && errors.description.message}*/}
-                    {/*    </FormErrorMessage>*/}
-                    {/*</FormControl>*/}
+                    <FormControl isInvalid={errors.date && true}>
+                        <FormLabel htmlFor="date">Valor</FormLabel>
+                        <Input
+                            id="date"
+                            {...register("date", {
+                                required: "O campo data é obrigatório",
+                            })}
+                            type="date"
+                            step="any"
+                        />
+
+                        <FormErrorMessage>
+                            {errors.date && errors.date.message}
+                        </FormErrorMessage>
+                    </FormControl>
+
+                    <FormControl isInvalid={errors.typeTransaction && true}>
+                        <FormLabel htmlFor="typeTransaction">Tipo</FormLabel>
+
+                        <Select
+                            id="typeTransaction"
+                            size="sm"
+                        >
+                            {types.map((type : string) => (
+                                <option key={type} value={type}>
+                                    {type}
+                                </option>
+                            ))}
+                        </Select>
+                        <FormErrorMessage>
+                            {errors.typeTransaction && errors.typeTransaction.message}
+                        </FormErrorMessage>
+                    </FormControl>
+
+                    <FormControl isInvalid={errors.status && true}>
+                        <FormLabel htmlFor="status">Status</FormLabel>
+
+                        <Select
+                            id="status"
+                            size="sm"
+                        >
+                            {statuslist.map((status : string) => (
+                                <option key={status} value={status}>
+                                    {status}
+                                </option>
+                            ))}
+                        </Select>
+                        <FormErrorMessage>
+                            {errors.status && errors.status.message}
+                        </FormErrorMessage>
+                    </FormControl>
+
+                    <FormControl isInvalid={errors.category && true}>
+                        <FormLabel htmlFor="category">Categoria</FormLabel>
+
+                        <Select
+                            id="category"
+                            size="sm"
+                        >
+                            {categoriesList.map((category : string) => (
+                                <option key={category} value={category}>
+                                    {category}
+                                </option>
+                            ))}
+                        </Select>
+                        <FormErrorMessage>
+                            {errors.category && errors.category.message}
+                        </FormErrorMessage>
+                    </FormControl>
 
                     <div className="text-center">
                         <Button
