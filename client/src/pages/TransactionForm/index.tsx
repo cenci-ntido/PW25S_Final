@@ -9,9 +9,15 @@ import AccountService from "@/service/AccountService.ts";
 import {FormControl, FormLabel, Select as SelectChakra} from "@chakra-ui/react";
 
 export function TransactionForm() {
-    const [options, setOptions] = useState<{ element: string }[]>([]);
-    const [optionsType, setOptionsType] = useState<{ element: string }[]>([]);
-    const [optionsCategories, setoptionsCategories] = useState<{ element: string }[]>([]);
+    const [options, setOptions] = useState<{
+        element: string
+    }[]>([]);
+    const [optionsType, setOptionsType] = useState<{
+        element: string
+    }[]>([]);
+    const [optionsCategories, setoptionsCategories] = useState<{
+        element: string
+    }[]>([]);
     const [types, setType] = useState<string[]>([]);
     const [statuslist, setStatus] = useState<string[]>([]);
     const [categoriesList, setCategoriesList] = useState<string[]>([]);
@@ -42,25 +48,13 @@ export function TransactionForm() {
     const {id} = useParams();
 
     const onChangeSelect = (event: ChangeEvent<HTMLSelectElement>) => {
-        const { value, name } = event.target;
-
-        if ("account" !== name) {
-            setForm((previousForm) => {
-                return {
-                    ...previousForm,
-                    [name]: value,
-                };
-            });
-        } else {
-            setForm((previousForm) => {
-                return {
-                    ...previousForm,
-                    [name]: { id: value },
-                };
-            });
-        }
-
-
+        const {value, name} = event.target;
+        setForm((previousForm) => {
+            return {
+                ...previousForm,
+                [name]: {id: value},
+            };
+        });
         setErrors((previousErrors) => {
             return {
                 ...previousErrors,
@@ -104,12 +98,14 @@ export function TransactionForm() {
         //         };
         //     });
         // }
-        setOptions(statuslist.map((element) => ({ element })));
-        setOptionsType(types.map((element) => ({ element })));
-        setoptionsCategories(categoriesList.map((element) => ({ element })));
+        setOptions(statuslist.map((element) => ({element})));
+        setOptionsType(types.map((element) => ({element})));
+        setoptionsCategories(categoriesList.map((element) => ({element})));
     }, [statuslist, types, categoriesList]);
 
-    const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const onChange = (
+        event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
         const {value, name} = event.target;
         setForm((previousForm) => {
             return {
@@ -120,7 +116,7 @@ export function TransactionForm() {
         setErrors((previousErrors) => {
             return {
                 ...previousErrors,
-                [name]: "",
+                [name]: undefined,
             };
         });
     };
@@ -183,7 +179,7 @@ export function TransactionForm() {
             date: form.date,
             category: form.category.toString(),
             account: form.account
-                // {id: form.account.id, description: form.account.description, savedMoney: form.account.savedMoney}
+            // {id: form.account.id, description: form.account.description, savedMoney: form.account.savedMoney}
         };
         setPendingApiCall(true);
         TransactionService.save(transaction)
@@ -266,13 +262,16 @@ export function TransactionForm() {
                         </SelectChakra>
                     </div>
                     <div className="form-floating mb-3">
-                        <Select id={'status'} list = {options} label={"Status"} name={"status"} onChange={onChangeSelect} value={form.status}></Select>
+                        <Select id={'status'} list={options} label={"Status"} name={"status"} onChange={onChangeSelect}
+                                value={form.status}></Select>
                     </div>
                     <div className="form-floating mb-3">
-                        <Select id={'typeTransaction'} list = {optionsType} label={"Tipo"} name={"typeTransaction"}  onChange={onChangeSelect} value={form.typeTransaction} ></Select>
+                        <Select id={'typeTransaction'} list={optionsType} label={"Tipo"} name={"typeTransaction"}
+                                onChange={onChangeSelect} value={form.typeTransaction}></Select>
                     </div>
                     <div className="form-floating mb-3">
-                        <Select id={'category'} list = {optionsCategories} label={"Categoria"}  name={"category"} onChange={onChangeSelect} value={form.category} ></Select>
+                        <Select id={'category'} list={optionsCategories} label={"Categoria"} name={"category"}
+                                onChange={onChangeSelect} value={form.category}></Select>
                     </div>
 
                     {apiError && (
@@ -280,8 +279,7 @@ export function TransactionForm() {
                             Falha ao cadastrar conta.
                         </div>
                     )}
-                    ACC: {JSON.stringify(form.account)}
-                    ACC: {JSON.stringify(form.typeTransaction)}
+                    {JSON.stringify(form)}
                     <ButtonWithProgress
                         onClick={onSubmit}
                         disabled={pendingApiCall ? true : false}

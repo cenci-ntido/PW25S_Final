@@ -6,7 +6,7 @@ import { AuthenticatedRoutes } from "../AuthenticatedRoutes";
 import { AccountListPage } from "@/pages/AccountListPage";
 import { AccountFormPage } from "@/pages/AccountForm";
 import { TransactionListPage } from "@/pages/TransactionListPage";
-import { TransactionForm } from "@/pages/TransactionForm";
+import { TransactionFormV2} from "@/pages/TransactionForm-v2";
 
 export function BaseRoutes() {
   return (
@@ -25,7 +25,7 @@ export function BaseRoutes() {
                     <Route path="/accounts/:id" element={<AccountFormPage />} />
 
                 <Route path="/transactions" element={<TransactionListPage />} />
-                <Route path="/transactions/new" element={<TransactionForm />} />
+                <Route path="/transactions/new" element={<TransactionFormV2 />} />
                 <Route path="/transactions/:id" element={<TransactionListPage />} />
 
             </Route>
