@@ -49,6 +49,12 @@ export function TransactionListPage() {
                             Nova Transação
                         </Link>
                     </Button>
+
+                    <Button colorScheme={'teal'}>
+                        <Link  to="/transactions-v1/new">
+                            Nova Transação v1
+                        </Link>
+                    </Button>
                 </div>
                 {apiError && <div className="alert alert-danger">{apiError}</div>}
                 <table className="table table-striped">

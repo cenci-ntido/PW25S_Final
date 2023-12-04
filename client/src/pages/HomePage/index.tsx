@@ -1,11 +1,16 @@
+import {Card, CardBody, Center, Text} from "@chakra-ui/react";
+
 export function HomePage() {
   return (
     <>
-      <main className="container">
-        <div className="text-center">
-          <h1 className="h3 mb-3 fw-normal">HOME PAGE</h1>
-        </div>
-      </main>
+        <Card>
+            <CardBody>
+                <Center>
+                    <Text colorScheme={'black'}>Últimas 5 receitas</Text>
+
+                </Center>
+            </CardBody>
+        </Card>
     </>
   );
 }

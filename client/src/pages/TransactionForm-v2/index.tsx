@@ -12,7 +12,7 @@ export function TransactionFormV2() {
         handleSubmit,
         register,
         formState: {errors, isSubmitting},
-        reset,
+        // reset,
     } = useForm<ITransaction>();
     const [apiError, setApiError] = useState("");
     const [accounts, setAccounts] = useState<IAccount[]>([]);
@@ -38,11 +38,11 @@ export function TransactionFormV2() {
     // Executa ao carregar o componente
     useEffect(() => {
         loadData()
-    }, [statuslist, types, categoriesList]);
+    }, []);
 
-    useEffect(() => {
-        reset(entity);
-    }, [entity, reset]);
+    // useEffect(() => {
+    //     reset(entity);
+    // }, [entity, reset]);
 
     const loadData = async () => {
         // Busca a lista de categorias
@@ -122,16 +122,17 @@ export function TransactionFormV2() {
 
 
     const onSubmit = (data: ITransaction) => {
+        console.log(JSON.stringify(data))
         const transaction: ITransaction = {
             ...data,
             id: entity.id,
-            description: entity.description,
-            realValue: entity.realValue,
-            typeTransaction: entity.typeTransaction,
-            status: entity.status,
-            date: entity.date,
-            category: entity.category,
-            account: {id: data.account.id, description: "", savedMoney: 0},
+            // description: entity.description,
+            // realValue: entity.realValue,
+            // typeTransaction: entity.typeTransaction,
+            // status: entity.status,
+            // date: entity.date,
+            // category: entity.category,
+            // account: {id: data.account.id, description: "", savedMoney: 0},
         };
 
         console.log(JSON.stringify(transaction))
@@ -229,6 +230,9 @@ export function TransactionFormV2() {
                         <Select
                             id="typeTransaction"
                             size="sm"
+                            {...register("typeTransaction", {
+                                required: "O campo data é obrigatório",
+                            })}
                         >
                             {types.map((type : string) => (
                                 <option key={type} value={type}>
@@ -247,6 +251,9 @@ export function TransactionFormV2() {
                         <Select
                             id="status"
                             size="sm"
+                            {...register("status", {
+                                required: "O campo data é obrigatório",
+                            })}
                         >
                             {statuslist.map((status : string) => (
                                 <option key={status} value={status}>
@@ -265,6 +272,9 @@ export function TransactionFormV2() {
                         <Select
                             id="category"
                             size="sm"
+                            {...register("category", {
+                                required: "O campo data é obrigatório",
+                            })}
                         >
                             {categoriesList.map((category : string) => (
                                 <option key={category} value={category}>
