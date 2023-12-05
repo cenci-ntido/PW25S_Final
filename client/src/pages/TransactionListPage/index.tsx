@@ -58,7 +58,7 @@ export function TransactionListPage() {
                 </div>
                 {apiError && <div className="alert alert-danger">{apiError}</div>}
                 <table className="table table-striped">
-                    <thead>//
+                    <thead>
                     <tr>
                         <td>#</td>
                         <td>Descrição</td>
