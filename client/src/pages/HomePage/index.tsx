@@ -1,26 +1,50 @@
-import {Box, Button, Card, CardBody, CardFooter, CardHeader, Flex, Heading, Text} from "@chakra-ui/react";
-import {Link} from "react-router-dom";
+import {
+
+    Flex,
+} from "@chakra-ui/react";
+import {useEffect, useState} from "react";
+import TransactionService from "@/service/TransactionService.ts";
+import {ListCard} from "@/components/ListCard";
+import {IAccount, ITransaction} from "@/commons/interfaces.ts";
+import {AccountsStats} from "@/components/AccountsStats";
+import AccountService from "@/service/AccountService.ts";
+
 
 export function HomePage() {
+    const [transactions, setTransactions] = useState<ITransaction[]>([]);
+    const [accounts, setAccounts] = useState<IAccount[]>([]);
+
+    useEffect(() => {
+        loadData();
+    }, []);
+
+    const loadData = () => {
+        TransactionService.findAll()
+            .then((response) => {
+                setTransactions(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        AccountService.findAll()
+            .then((response) => {
+                setAccounts(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
+
     return (
         <>
             <Flex>
-                <Box width={'50%'} >
-                    <Card variant={'filled'}>
-
-                        <CardHeader>
-                            <Heading size='md' textAlign={'center'}>Saldo das contas</Heading>
-                        </CardHeader>
-                        <CardBody>
-                            <Text></Text>
-                        </CardBody>
-                        <CardFooter>
-                            <Button colorScheme='teal'><Link to="/transactions">Acesse as transações</Link></Button>
-                        </CardFooter>
-                    </Card>
-                </Box>
+                <ListCard transactionsList={transactions} title={"Últimas receitas"} type={"RECEITA"}
+                          color={"green.100"}></ListCard>
+                <ListCard transactionsList={transactions} title={"Últimas despesas"} type={"DESPESA"}
+                          color={"red.100"}></ListCard>
+                <AccountsStats accountsList={accounts} title={"Saldo de contas"} color={"yellow.100"}></AccountsStats>
             </Flex>
-
         </>
     );
 }
