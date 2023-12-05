@@ -23,9 +23,6 @@ export function ListCard({transactionsList, title, type, color}: ListCardProps) 
                             .filter((transaction: ITransaction) => {
                                 return transaction.typeTransaction === type as string;
                             })
-                            .filter((transaction: ITransaction) => {
-                                return transaction.typeTransaction === type as string;
-                            })
                             .slice(0, 5)
                             .map((transaction: ITransaction) => (
                                 <GridItem width={'100%'}>

@@ -36,6 +36,17 @@ export function HomePage() {
     };
 
 
+    const totReceitas = transactions
+        .filter((transaction: ITransaction) => transaction.typeTransaction === "RECEITA")
+        .reduce((total, transaction) => total + transaction.realValue, 0);
+
+    const totDespesas = transactions
+        .filter((transaction: ITransaction) => transaction.typeTransaction === "DESPESA")
+        .reduce((total, transaction) => total + transaction.realValue, 0);
+
+    const saldo = totReceitas - totDespesas;
+
+
     return (
         <>
             <Flex>
@@ -43,7 +54,8 @@ export function HomePage() {
                           color={"green.100"}></ListCard>
                 <ListCard transactionsList={transactions} title={"Últimas despesas"} type={"DESPESA"}
                           color={"red.100"}></ListCard>
-                <AccountsStats accountsList={accounts} title={"Saldo de contas"} color={"yellow.100"}></AccountsStats>
+                <AccountsStats saldo={saldo.toString()} accountsList={accounts} title={"Saldo de contas"}
+                               color={"yellow.100"}></AccountsStats>
             </Flex>
         </>
     );

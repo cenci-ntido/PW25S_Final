@@ -18,9 +18,10 @@ interface AccountsStatsProps {
     accountsList: IAccount[];
     title: string;
     color: string;
+    saldo: string;
 }
 
-export function AccountsStats({accountsList, title, color}: AccountsStatsProps) {
+export function AccountsStats({accountsList, title, color, saldo}: AccountsStatsProps) {
     return (
         <Box width={'50%'}>
             <Card variant={'filled'} bgColor={color} margin={'2rem'}>
@@ -31,11 +32,11 @@ export function AccountsStats({accountsList, title, color}: AccountsStatsProps) 
                     <Grid templateColumns='repeat(2, 1fr)' gap={4}>
                         {accountsList
                             .map((account: IAccount) => (
-                                <GridItem width={'100%'}>
+                                <GridItem width={'100%'} bgColor={'blackAlpha.100'} padding={'1rem'} rounded={'0.5rem'}>
                                     <Stat>
                                         <StatLabel>{account.description}</StatLabel>
-                                        <StatNumber>R$0.00</StatNumber>
-                                        <StatHelpText>Feb 12 - Feb 28</StatHelpText>
+                                        <StatNumber>R$ {saldo}</StatNumber>
+                                        <StatHelpText>Guardado: R$ {account.savedMoney}</StatHelpText>
                                     </Stat>
                                     {/*<Card width={'100%'}>*/}
                                     {/*    <CardHeader bgColor={'blackAlpha.100'}>*/}
