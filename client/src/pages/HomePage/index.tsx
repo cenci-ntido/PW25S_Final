@@ -87,7 +87,7 @@ export function HomePage() {
                                 >
                                     <Stat>
                                         <StatLabel>{account.description}</StatLabel>
-                                        <StatNumber>{calculateAccountBalance(account.id)}</StatNumber>
+                                        <StatNumber>R$ {calculateAccountBalance(account.id)}</StatNumber>
                                         <StatHelpText>Guardado: R$ {account.savedMoney}</StatHelpText>
                                     </Stat>
                                 </GridItem>)}
