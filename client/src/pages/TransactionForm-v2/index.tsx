@@ -149,7 +149,7 @@ export function TransactionFormV2() {
     return (
         <>
             <div className="container">
-                <h1 className="fs-2 text-center">Cadastro de Transações - V2</h1>
+                <h1 className="fs-2 text-center">Cadastro de Transações</h1>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <FormControl isInvalid={errors.description && true}>
                         <FormLabel htmlFor="name">Descrição</FormLabel>

@@ -8,13 +8,15 @@ import {
 import {useEffect, useState} from "react";
 import TransactionService from "@/service/TransactionService.ts";
 import {ListCard} from "@/components/ListCard";
-import {IAccount, ITransaction} from "@/commons/interfaces.ts";
+import {IAccount, ITransaction, ITransfer} from "@/commons/interfaces.ts";
 import AccountService from "@/service/AccountService.ts";
 import {Link} from "react-router-dom";
+import TransferService from "@/service/TransferService.ts";
 
 
 export function HomePage() {
     const [transactions, setTransactions] = useState<ITransaction[]>([]);
+    const [transfers, setTransfers] = useState<ITransfer[]>([]);
     const [accounts, setAccounts] = useState<IAccount[]>([]);
 
     useEffect(() => {
@@ -36,6 +38,13 @@ export function HomePage() {
             .catch((error) => {
                 console.log(error);
             });
+        TransferService.findAll()
+            .then((response) => {
+                setTransfers(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     };
 
 
@@ -52,6 +61,15 @@ export function HomePage() {
             (transaction) => transaction.account.id === accountID
         );
 
+        const accountTransfersOrigin = transfers.filter(
+            (transfer) => transfer.accountOrigin.id === accountID
+        );
+
+        const accountTransfersDestiny = transfers.filter(
+            (transfer) => transfer.accountDestiny.id === accountID
+        );
+
+
         const accountReceitas = accountTransactions
             .filter((transaction) => transaction.typeTransaction === "RECEITA")
             .reduce((total, transaction) => total + transaction.realValue, 0);
@@ -60,7 +78,14 @@ export function HomePage() {
             .filter((transaction) => transaction.typeTransaction === "DESPESA")
             .reduce((total, transaction) => total + transaction.realValue, 0);
 
-        return accountReceitas - accountDespesas;
+        const accountTransfersRecebidas = accountTransfersDestiny
+            .reduce((total, transfer) => total + transfer.realValue, 0);
+
+        const accountTransfersEnviadas = accountTransfersOrigin
+            .reduce((total, transfer) => total + transfer.realValue, 0);
+
+
+        return (accountReceitas + accountTransfersRecebidas) - (accountDespesas + accountTransfersEnviadas);
     };
 
 

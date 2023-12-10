@@ -30,11 +30,11 @@ export function BaseRoutes() {
                 <Route path="/transactions" element={<TransactionListPage/>}/>
                 <Route path="/transactions/new" element={<TransactionFormV2/>}/>
                 <Route path="/transactions-v1/new" element={<TransactionForm/>}/>
-                <Route path="/transactions/:id" element={<TransactionListPage/>}/>
+                <Route path="/transactions/:id" element={<TransactionForm/>}/>
 
                 <Route path="/transfers" element={<TransferListPage />} />
                 <Route path="/transfers/new" element={<TransferForm />} />
-                <Route path="/transfers/:id" element={<TransferListPage />} />
+                <Route path="/transfers/:id" element={<TransferForm />} />
 
 
             </Route>

@@ -1,12 +1,34 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { ITransaction } from "@/commons/interfaces";
 import TransactionService from "@/service/TransactionService.ts";
-import {ITransaction} from "@/commons/interfaces";
-import {Link} from "react-router-dom";
-import {Button} from "@chakra-ui/react";
+import {
+    BsPlusCircle,
+    BsThreeDotsVertical,
+    BsPencilSquare,
+    BsTrash,
+} from "react-icons/bs";
+import {
+    TableContainer,
+    Table,
+    TableCaption,
+    Thead,
+    Tr,
+    Th,
+    Tbody,
+    Td,
+    Menu,
+    MenuButton,
+    IconButton,
+    MenuList,
+    MenuItem,
+} from "@chakra-ui/react";
 
 export function TransactionListPage() {
-    const [data, setData] = useState([]);
+    const [data, setData] = useState<ITransaction[]>([]);
     const [apiError, setApiError] = useState("");
+    const [showDeleteMessage, setShowDeleteMessage] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         loadData();
@@ -16,94 +38,108 @@ export function TransactionListPage() {
         TransactionService.findAll()
             .then((response) => {
                 setData(response.data);
+                setApiError("");
             })
-            .catch((error) => {
-                console.log(error);
+            .catch(() => {
+                setApiError("Falha ao carregar a lista de produtos");
             });
     };
 
-    const onClickRemove = (id?: number) => {
-        if (id) {
-            TransactionService.remove(id)
-                .then(() => {
-                    loadData();
-                    setApiError("");
-                })
-                .catch((responseError) => {
-                    console.log(responseError);
-                    setApiError(responseError.response.data.message);
-                });
-        }
+    const onEdit = (path: string) => {
+        navigate(path);
+    };
+
+    const onRemove = (id: number) => {
+        TransactionService.remove(id)
+            .then(() => {
+                setShowDeleteMessage(true);
+                loadData();
+                setTimeout(() => {
+                    setShowDeleteMessage(false);
+                }, 1500);
+                setApiError("");
+            })
+            .catch(() => {
+                setApiError("Falha ao remover o produto");
+            });
     };
 
     return (
         <>
-            <main className="container">
+            <div className="container">
+                <h1 className="fs-2 mb-4 text-center">Lista de Transações</h1>
                 <div className="text-center">
-                    <h1 className="h3 mb-3 fw-normal">Lista de Transações</h1>
+                    <Link
+                        className="btn btn-success btn-icon mb-3"
+                        to="/transactions/new"
+                        title="Nova transação"
+                        style={{ display: "inline-block" }}
+                    >
+                        <BsPlusCircle style={{ display: "inline-block" }} /> Nova Transação
+                    </Link>
                 </div>
-                <div className="text-center">
-
-                    <Button colorScheme={'teal'}>
-                        <Link  to="/transactions/new">
-                            Nova Transação
-                        </Link>
-                    </Button>
-
-                    <Button colorScheme={'teal'}>
-                        <Link  to="/transactions-v1/new">
-                            Nova Transação v1
-                        </Link>
-                    </Button>
-                </div>
+                <TableContainer>
+                    <Table>
+                        <TableCaption>Lista de Transações</TableCaption>
+                        <Thead>
+                            <Tr>
+                                <Th>#</Th>
+                                <Th>Descrição</Th>
+                                <Th isNumeric>Valor</Th>
+                                <Th>Data</Th>
+                                <Th>Conta</Th>
+                                <Th>Tipo</Th>
+                                <Th>Status</Th>
+                                <Th>Categoria</Th>
+                                <Th>Ações</Th>
+                            </Tr>
+                        </Thead>
+                        <Tbody>
+                            {data.map((transaction: ITransaction) => (
+                                <Tr
+                                    key={transaction.id}
+                                    _hover={{ cursor: "pointer", background: "#eee" }}
+                                >
+                                    <Td>{transaction.id}</Td>
+                                    <Td>{transaction.description}</Td>
+                                    <Td isNumeric>{transaction.realValue}</Td>
+                                    <Td >{transaction.date}</Td>
+                                    <Td>{transaction.account?.description}</Td>
+                                    <Td>{transaction.typeTransaction}</Td>
+                                    <Td>{transaction.status}</Td>
+                                    <Td>{transaction.category}</Td>
+                                    <Td>
+                                        <Menu>
+                                            <MenuButton
+                                                as={IconButton}
+                                                aria-label="Actions"
+                                                icon={<BsThreeDotsVertical size={20} />}
+                                                variant="ghost"
+                                            />
+                                            <MenuList>
+                                                <MenuItem
+                                                    icon={<BsPencilSquare />}
+                                                    onClick={() => onEdit(`/transactions/${transaction.id}`)}
+                                                >
+                                                    Editar
+                                                </MenuItem>
+                                                <MenuItem
+                                                    icon={<BsTrash />}
+                                                    onClick={() => onRemove(transaction.id!)}
+                                                >
+                                                    Remover
+                                                </MenuItem>
+                                            </MenuList>
+                                        </Menu>
+                                    </Td>
+                                </Tr>
+                            ))}
+                        </Tbody>
+                    </Table>
+                </TableContainer>
                 {apiError && <div className="alert alert-danger">{apiError}</div>}
-                <table className="table table-striped">
-                    <thead>
-                    <tr>
-                        <td>#</td>
-                        <td>Descrição</td>
-                        <td>Valor</td>
-                        <td>Data</td>
-                        <td>Conta</td>
-                        <td>Status</td>
-                        <td>Tipo</td>
-                        <td>Categoria</td>
-                        <td>Editar</td>
-                        <td>Remover</td>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {data.map((transaction: ITransaction) => (
-                        <tr key={transaction.id}>
-                            <td>{transaction.id}</td>
-                            <td>{transaction.description}</td>
-                            <td>{transaction.realValue}</td>
-                            <td>{transaction.date}</td>
-                            <td>{transaction.account.description}</td>
-                            <td>{transaction.status}</td>
-                            <td>{transaction.typeTransaction}</td>
-                            <td>{transaction.category}</td>
-                            <td>
-                                <Link
-                                    className="btn btn-primary"
-                                    to={`/transactions/${transaction.id}`}
-                                >
-                                    Editar
-                                </Link>
-                            </td>
-                            <td>
-                                <button
-                                    className="btn btn-danger"
-                                    onClick={() => onClickRemove(transaction.id)}
-                                >
-                                    Remover
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
-            </main>
+                {showDeleteMessage && <div className="alert alert-success">Produto removido com sucesso!</div>}
+            </div>
         </>
     );
 }
