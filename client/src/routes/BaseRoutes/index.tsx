@@ -8,6 +8,8 @@ import { AccountFormPage } from "@/pages/AccountForm";
 import { TransactionListPage } from "@/pages/TransactionListPage";
 import { TransactionFormV2} from "@/pages/TransactionForm-v2";
 import {TransactionForm} from "@/pages/TransactionForm";
+import {TransferListPage} from "@/pages/TransferListPage";
+import {TransferForm} from "@/pages/TransferForm";
 
 export function BaseRoutes() {
   return (
@@ -25,10 +27,15 @@ export function BaseRoutes() {
                     <Route path="/accounts/new" element={<AccountFormPage />} />
                     <Route path="/accounts/:id" element={<AccountFormPage />} />
 
-                <Route path="/transactions" element={<TransactionListPage />} />
-                <Route path="/transactions/new" element={<TransactionFormV2 />} />
-                <Route path="/transactions-v1/new" element={<TransactionForm />} />
-                <Route path="/transactions/:id" element={<TransactionListPage />} />
+                <Route path="/transactions" element={<TransactionListPage/>}/>
+                <Route path="/transactions/new" element={<TransactionFormV2/>}/>
+                <Route path="/transactions-v1/new" element={<TransactionForm/>}/>
+                <Route path="/transactions/:id" element={<TransactionListPage/>}/>
+
+                <Route path="/transfers" element={<TransferListPage />} />
+                <Route path="/transfers/new" element={<TransferForm />} />
+                <Route path="/transfers/:id" element={<TransferListPage />} />
+
 
             </Route>
         </Routes>

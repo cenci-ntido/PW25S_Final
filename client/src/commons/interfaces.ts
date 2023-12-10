@@ -25,3 +25,12 @@ export interface ITransaction {
     status: string;
     typeTransaction: string;
 }
+
+export interface ITransfer {
+    id?: number;
+    description: string;
+    realValue: number;
+    date: string;
+    accountOrigin: IAccount;
+    accountDestiny: IAccount;
+}

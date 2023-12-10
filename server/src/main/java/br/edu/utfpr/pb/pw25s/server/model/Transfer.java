@@ -42,4 +42,11 @@ public class Transfer extends GenericModel {
     @JoinColumn(name = "account_destiny_id", referencedColumnName = "id")
     private Account accountDestiny;
 
+    @PrePersist
+    @PreUpdate
+    private void validateAccounts() {
+        if (accountOrigin != null && accountOrigin.equals(accountDestiny)) {
+            throw new IllegalStateException("Conta de origem não pode ser igual à conta de destino.");
+        }
+    }
 }

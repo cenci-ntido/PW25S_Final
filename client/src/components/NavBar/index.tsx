@@ -76,6 +76,17 @@ export function NavBar() {
                                     Transações
                                 </NavLink>
                             </Tab>
+                            <Tab
+                                onClick={onClick}
+                                aria-selected={url === "/transfers"}
+                            >
+                                <NavLink
+                                    to="/transfers"
+                                    style={{ color: "white" }}
+                                >
+                                    Transferências
+                                </NavLink>
+                            </Tab>
                         </TabList>
                     </Tabs>
                     <Button
