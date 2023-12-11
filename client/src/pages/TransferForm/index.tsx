@@ -39,14 +39,13 @@ export function TransferForm() {
             .then((response) => {
                 // caso sucesso, adiciona a lista no state
                 setAccounts(response.data);
-                setApiError("false");
+                setApiError("");
             })
             .catch(() => {
-                setApiError("true");
+                setApiError("Falha buscar contas");
             });
 
         if (id) {
-            // ao editar um produto, busca ele no back-end e carrega no objeto form que está no state.
             TransferService.findById(parseInt(id))
                 .then((response) => {
                     if (response.data) {
@@ -55,19 +54,22 @@ export function TransferForm() {
                             description: response.data.description,
                             realValue: response.data.realValue,
                             date: response.data.date,
-                            accountOrigin: {id: response.data.accountOrigin.id, description: "", savedMoney: 0},
-                            accountDestiny: {id: response.data.accountDestiny.id, description: "", savedMoney: 0},
+                            accountOrigin: {
+                                id: response.data.accountOrigin.id,
+                                description: response.data.accountOrigin.description,
+                                savedMoney: response.data.accountOrigin.savedMoney
+                            },
+                            accountDestiny: {
+                                id: response.data.accountDestiny.id,
+                                description: response.data.accountDestiny.description,
+                                savedMoney: response.data.accountDestiny.savedMoney
+                            }
                         });
-                        setApiError("");
-
-                    } else {
-                        setApiError("Falha ao carregar a transferência");
                     }
                 })
-                .catch(() => {
-                    setApiError("Falha ao carregar a transferência");
-                });
-
+                .catch((error) => {
+                    console.log(error);
+                })
         } else {
             setEntity((previousEntity) => {
                 return {
@@ -78,7 +80,6 @@ export function TransferForm() {
             });
         }
     };
-
 
 
     const onSubmit = (data: ITransfer) => {

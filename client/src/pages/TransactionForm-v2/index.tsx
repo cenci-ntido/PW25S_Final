@@ -12,7 +12,7 @@ export function TransactionFormV2() {
         handleSubmit,
         register,
         formState: {errors, isSubmitting},
-        // reset,
+        reset,
     } = useForm<ITransaction>();
     const [apiError, setApiError] = useState("");
     const [accounts, setAccounts] = useState<IAccount[]>([]);
@@ -50,39 +50,39 @@ export function TransactionFormV2() {
             .then((response) => {
                 // caso sucesso, adiciona a lista no state
                 setAccounts(response.data);
-                setApiError("false");
+                setApiError("");
             })
             .catch(() => {
-                setApiError("true");
+                setApiError("Falha ao carregar contas");
             });
         await TransactionService.getenumtype()
             .then((response) => {
                 // caso sucesso, adiciona a lista no state
                 setType(response.data);
-                setApiError("false");
+                setApiError("");
             })
             .catch(() => {
-                setApiError("true");
+                setApiError("Falha carregar tipos");
             });
 
         await TransactionService.getenumstatus()
             .then((response) => {
                 // caso sucesso, adiciona a lista no state
                 setStatus(response.data);
-                setApiError("false");
+                setApiError("");
             })
             .catch(() => {
-                setApiError("true");
+                setApiError("Falha carregar status");
             });
 
         await TransactionService.getenumcategories()
             .then((response) => {
                 // caso sucesso, adiciona a lista no state
                 setCategoriesList(response.data);
-                setApiError("false");
+                setApiError("");
             })
             .catch(() => {
-                setApiError("true");
+                setApiError("Falhas carregar categorias");
             });
 
         if (id) {
